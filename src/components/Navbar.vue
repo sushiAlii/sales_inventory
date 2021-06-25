@@ -1,0 +1,103 @@
+<template>
+    <nav>
+        <v-app-bar class ="black" dark elevation=0 app>
+            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-app-bar-title class="text-uppercase grey--text">
+                <span class="font-weight-light">black</span>
+                <span>scoop</span>
+            </v-app-bar-title>
+            <v-spacer></v-spacer>
+            <v-btn class="black">
+                <span>Sign Out</span>
+                <v-icon right>mdi-logout</v-icon>
+            </v-btn>
+        </v-app-bar>
+
+        <!--        NAVIGATION DRAWER -->
+        <v-navigation-drawer class="black" v-model="drawer" app dark>
+            <v-layout column align-center>
+                <v-flex class="mt-5">
+                    <v-avatar size="100">
+                        <img src="/logo.jpg" alt="">
+                    </v-avatar>
+                    <p class="white--text subheading mt-1 ml-6">Admin</p>
+                </v-flex>
+            </v-layout>
+            
+            <v-list>
+                <v-list-item v-for="item in items" :key="item.text" router :to="item.route">
+                    <v-list-item-icon>
+                        <v-icon> {{ item.icon }} </v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>{{ item.text }}</v-list-item-content>
+                </v-list-item>
+                <v-list-group
+                :value="false"
+                prepend-icon="mdi-hammer-screwdriver"
+                >
+                    <template v-slot:activator>
+                        <v-list-item-title>Settings</v-list-item-title>
+                    </template>
+                    <v-list-item 
+                    v-for="setting in settings" 
+                    :key="setting.text" 
+                    router 
+                    :to="setting.route"
+                    >
+                        <v-list-item-title v-text="setting.text" class="font-weight-light ml-14"></v-list-item-title>
+                        <v-list-item-icon>
+                            <v-icon v-text="setting.icon"></v-icon>
+                        </v-list-item-icon>
+                    </v-list-item>
+                </v-list-group>
+            </v-list>
+        </v-navigation-drawer>
+    </nav>
+</template>
+
+<script>
+
+    export default{
+        data(){
+            return {
+                drawer : true,
+                items: [
+                    {icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/'},
+                    {icon: 'mdi-truck-delivery', text: 'Purchases', route: '/purchases'},
+                    {icon: 'mdi-cube', text: 'Inventory', route: '/inventory'},
+                ],
+                settings: [
+                    {icon: 'mdi-account-settings', text: 'Account', route: '/settings/account'},
+                    {icon: 'mdi-cogs', text: 'Miscellaneous', route: '/settings/miscallaneous'},
+                    {icon: 'mdi-account-cog', text: 'Manage Accounts', route: '/settings/manage_accounts'},
+                ],
+                active: true,
+            }
+        }
+    }
+
+
+//      <v-list-group
+//               v-model="item.active"
+//               v-for="item in items"
+//               :key="item.title"
+//               :prepend-icon="item.action"
+//               no-action
+//             >
+//               <v-list-tile slot="activator">
+//                 <v-list-tile-content>
+//                   <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+//                 </v-list-tile-content>
+//               </v-list-tile>
+//               <v-list-tile v-for="subItem in item.items" :key="subItem.title" ripple @click="close">
+//                 <v-list-tile-content>
+//                   <v-list-tile-title>{{ subItem.title }}</v-list-tile-title>
+//                 </v-list-tile-content>
+//                 <v-list-tile-action>
+//                   <v-icon>{{ subItem.action }}</v-icon>
+//                 </v-list-tile-action>
+//               </v-list-tile>
+//      </v-list-group>
+</script>
+
+
