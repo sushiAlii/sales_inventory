@@ -1,13 +1,13 @@
 <template>
     <nav>
-        <v-app-bar class ="black" dark elevation=0 app>
-            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-app-bar-title class="text-uppercase grey--text">
+        <v-app-bar flat app color="transparent">
+            <v-app-bar-nav-icon @click="drawer = !drawer" class="white ml-1" elevation="2"></v-app-bar-nav-icon>
+            <v-app-bar-title class="text-uppercase black--text">
                 <span class="font-weight-light">black</span>
                 <span>scoop</span>
             </v-app-bar-title>
             <v-spacer></v-spacer>
-            <v-btn class="black">
+            <v-btn elevation=0 color="transparent" @click.prevent="handleLogout">
                 <span>Sign Out</span>
                 <v-icon right>mdi-logout</v-icon>
             </v-btn>
@@ -20,23 +20,21 @@
                     <v-avatar size="100">
                         <img src="/logo.jpg" alt="">
                     </v-avatar>
-                    <p class="white--text subheading mt-1 ml-6">Admin</p>
                 </v-flex>
             </v-layout>
-            
             <v-list>
                 <v-list-item v-for="item in items" :key="item.text" router :to="item.route">
                     <v-list-item-icon>
                         <v-icon> {{ item.icon }} </v-icon>
                     </v-list-item-icon>
-                    <v-list-item-content>{{ item.text }}</v-list-item-content>
+                    <v-list-item-content class="subtitle-1">{{ item.text }}</v-list-item-content>
                 </v-list-item>
                 <v-list-group
                 :value="false"
                 prepend-icon="mdi-hammer-screwdriver"
                 >
                     <template v-slot:activator>
-                        <v-list-item-title>Settings</v-list-item-title>
+                        <v-list-item-title class="subtitle-1">Settings</v-list-item-title>
                     </template>
                     <v-list-item 
                     v-for="setting in settings" 
@@ -44,7 +42,7 @@
                     router 
                     :to="setting.route"
                     >
-                        <v-list-item-title v-text="setting.text" class="font-weight-light ml-14"></v-list-item-title>
+                        <v-list-item-title v-text="setting.text" class="subtitle-2 ml-14"></v-list-item-title>
                         <v-list-item-icon>
                             <v-icon v-text="setting.icon"></v-icon>
                         </v-list-item-icon>
@@ -56,6 +54,7 @@
 </template>
 
 <script>
+    import { supabase } from '@/supabase'
 
     export default{
         data(){
@@ -63,15 +62,24 @@
                 drawer : true,
                 items: [
                     {icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/'},
-                    {icon: 'mdi-truck-delivery', text: 'Purchases', route: '/purchases'},
+                    {icon: 'mdi-coffee', text: 'Items', route: '/items'},
                     {icon: 'mdi-cube', text: 'Inventory', route: '/inventory'},
                 ],
                 settings: [
-                    {icon: 'mdi-account-settings', text: 'Account', route: '/settings/account'},
-                    {icon: 'mdi-cogs', text: 'Miscellaneous', route: '/settings/miscallaneous'},
+                    {icon: 'mdi-account-settings', text: 'Account', route: '/settings/accounts'},
                     {icon: 'mdi-account-cog', text: 'Manage Accounts', route: '/settings/manage_accounts'},
+                    {icon: 'mdi-cogs', text: 'Miscellaneous', route: '/settings/miscellaneous'},
                 ],
                 active: true,
+            }
+        },
+        methods: {
+            async handleLogout () {
+                const {error} = await supabase.auth.signOut()
+                .then(response => {
+                    console.log(response)
+                    this.$router.push('/login')
+                })
             }
         }
     }

@@ -1,7 +1,7 @@
 <template>
     <v-main>
         <navbar />
-        <h1>Purchases</h1>
+        <h1>Miscellaneous</h1>
     </v-main>
 </template>
 
@@ -9,7 +9,7 @@
     import Navbar from '@/components/Navbar'
 
     export default {
-        name: 'Purchases',
+        name: 'Miscellaneous',
 
         components: {
             Navbar,
