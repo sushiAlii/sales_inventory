@@ -1,26 +1,120 @@
 <template>
     <v-main>
         <navbar />
-        <h1>Manage Accounts</h1>
-        <v-row
-            align="center"
-            justify="space-around"
-        >
-            <v-btn
-                depressed
-                color="primary"
-                class="mt-2"
-                @click.prevent="handleRegister"
-                elevation="1"
+        
+        <v-container class="my-15">
+            <v-row>
+                <v-col
+                    cols="12"
+                    md="4"
+                    sm="4"
+                    v-for="profile in profiles"
+                    :key="profile.id"
+                >
+                    <base-material-card
+                    class="v-card-profile"
+                    v-bind:avatar= "profile.avatar_url"
+                    >
+                    <v-card-text class="text-center">
+                        <h6 class="display-1 mb-1 grey--text">
+                            {{ profile.role_name }}
+                        </h6>
+
+                        <h4 class="display-2 font-weight-light mb-3 black--text">
+                        {{ profile.first_name }} {{ profile.last_name }}
+                        </h4>
+
+                        <p class="font-weight-light grey--text">
+                            {{ profile.about_me }}
+                        </p>
+                    </v-card-text>
+                    </base-material-card>
+                </v-col>
+            </v-row>
+        </v-container>
+        <v-container>
+            <v-dialog
+                v-model="dialog"
+                persistent
+                max-width="600px"
             >
-                Create Account
-            </v-btn>
-        </v-row>
+                <template v-slot:activator="{ on, attrs }">
+                
+                    <div class= "d-flex justify-center">
+                        <v-btn
+                            depressed
+                            color="success"
+                            class="d-flex mb-6 mt-2 "
+                            elevation="1"
+                            v-bind="attrs"
+                            v-on="on"
+                        >
+                            Create Account
+                        </v-btn>
+                    </div>
+                </template>
+                <v-card>
+                    <v-card-title>
+                        <span class="text-h5">Create a User</span>
+                    </v-card-title>
+                    <v-card-text>
+                    <v-container>
+                        <v-form
+                        ref="form"
+                        v-model="userCreate.valid"
+                        lazy-validation
+                        >
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-text-field
+                                    label="Email"
+                                    :rules="userCreate.rules.emailRules"
+                                    v-model="userCreate.email"
+                                    required
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-text-field
+                                    label="Password"
+                                    v-model="userCreate.password"
+                                    :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                                    :type="show ? 'text' : 'password'"
+                                    :rules="userCreate.rules.passwordRules"
+                                    @click:append="show = !show"
+                                    required
+                                    ></v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-form>
+                    </v-container>
+                    <small>*indicates required field</small>
+                    </v-card-text>
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="reset"
+                    >
+                        Close
+                    </v-btn>
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="handleRegister"
+                    >
+                        Register
+                    </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-container>
     </v-main>
 </template>
 
 <script>
     import Navbar from '@/components/Navbar'
+    import MaterialCard from '@/components/MaterialCard.vue'
     import { supabase } from '@/supabase'
 
 
@@ -29,25 +123,98 @@
 
         components: {
             Navbar,
+            'base-material-card': MaterialCard
         },
         data () {
             return {
-
+                dialog: false,
+                show: false,
+                userCreate: {
+                    valid: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    rules: {
+                        emailRules: [
+                            v => !!v || 'E-mail is required',
+                            v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                        ],
+                        passwordRules: [
+                            v => !!v || 'Password is required',
+                            v => v.length >= 8 || 'Min 8 characters',
+                        ]
+                    }
+                },
+                profiles: [
+                    {
+                        id: '',
+                        first_name: '',
+                        last_name: '',
+                        avatar_url: '',
+                        role_name: '',
+                    }
+                ],
             }
+        },
+        mounted(){
+            this.loadUsers()
         },
         methods: {
             async handleRegister () {
                 try{
                     const { user, session, error } =  await supabase.auth.signUp({
-                    email: 'aliasgar.laut@gmail.com',
-                    password: 'password',
-                    }).then(response => {
-                        console.log(response);
+                    email: this.userCreate.email,
+                    password: this.userCreate.password,
                     })
+                    if(error){
+                        console.log('Register failed!')
+                    }else{
+                        console.log('Register Success! Email Sent')
+                    }
                 }catch(error){
                     console.log(error);
                 }
-            }
+                this.$refs.form.reset()
+                this.dialog = false
+            },
+            async loadUsers(){
+                try{
+                    let { data: profiles, error } = await supabase
+                    .from('profiles')
+                    .select(`
+                        id, 
+                        first_name, 
+                        last_name, 
+                        about_me, 
+                        avatar_url,
+                        roles(
+                            role_name
+                        )
+                    `)
+
+                    if(error){
+                        console.log('Failed to load Users')
+                    }else{
+                        console.log('Users Retrieved Successfully!')
+                        console.log(profiles)
+                        for(let i = 0;i<profiles.length;i++){
+                            this.profiles[i].id = profiles[i].id
+                            this.profiles[i].first_name = profiles[i].first_name
+                            this.profiles[i].last_name = profiles[i].last_name
+                            this.profiles[i].about_me = profiles[i].about_me
+                            this.profiles[i].avatar_url = profiles[i].avatar_url
+                            this.profiles[i].role_name = profiles[i].roles.role_name
+                        }
+                    }
+                }catch(error){
+                    console.log(error)
+                }
+            },
+            reset () {
+                console.log('reset')
+                this.$refs.form.reset()
+                this.dialog = false
+            },
         }
         
     }

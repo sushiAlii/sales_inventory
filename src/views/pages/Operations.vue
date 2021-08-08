@@ -13,6 +13,59 @@
                     </v-breadcrumbs-item>
                     </template>
                 </v-breadcrumbs>
+                <div 
+                    class="my-4 mr-4 d-flex flex-row-reverse"
+                >
+                    <v-row>
+                        <v-col
+                            cols="12"
+                            sm="4"
+                            md="4"
+                        >
+                            <v-menu
+                                v-model="menu"
+                                ref="menu"
+                                :close-on-content-click="false"
+                                :return-value.sync="date"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="auto"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="dateRangeText"
+                                    label="Date Range"
+                                    prepend-icon="mdi-calendar"
+                                    readonly
+                                    v-bind="attrs"
+                                    v-on="on"
+                                ></v-text-field>
+                                </template>
+                                <v-date-picker
+                                    v-model="dates"
+                                    range
+                                    width="300"
+                                >
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        text
+                                        color="primary"
+                                        @click="menu = false"
+                                    >
+                                        Cancel
+                                    </v-btn>
+                                    <v-btn
+                                        text
+                                        color="primary"
+                                        @click="loadNewOperations"
+                                    >
+                                        OK
+                                    </v-btn>
+                                </v-date-picker>
+                            </v-menu>
+                            </v-col>
+                    </v-row>
+                </div>
                 <v-card>
                     <v-card-title>
                         <v-text-field
@@ -47,6 +100,9 @@
         data (){
             return {
                 search: '',
+                date: '',
+                menu: false,
+                dates: ['',''],
                 operations: [],
                 items: [
                     {
@@ -100,19 +156,27 @@
                     },
                                         {
                         text: 'Item Util.',
-                        value: 'item_utilization' 
+                        value: 'item_util' 
                     },
                 ],
             }
         },
         mounted() {
             this.loadOperations()
+            this.getCurrentDate()
+        },
+        computed: {
+            dateRangeText () {
+                return this.dates.join(' ~ ')
+            },
         },
         methods: {
             async loadOperations () {
                 let { data, error } = await supabase
                     .from('operation_view')
                     .select('*')
+                    // .gte('date_received',this.dates[0])
+                    // .lte('date_received',this.dates[1])
                 
                 if(error){
                     console.log(error)
@@ -120,6 +184,25 @@
                     console.log('Success Query')
                     this.operations = data;
                 }
+            },
+            async loadNewOperations () {
+                console.log(this.dates)
+                
+                let { data, error } = await supabase
+                    .rpc('getfilterdoperation', {
+                        date_end: this.dates[1], 
+                        date_start: this.dates[0]
+                    })
+
+                    if (error) console.error(error)
+                    else this.operations = data;
+                this.menu=false;
+            },
+            getCurrentDate(){
+                const today = new Date();
+                    const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                    this.current_date = date;
+                    
             },
         }
 

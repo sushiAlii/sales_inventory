@@ -1,6 +1,12 @@
 <template>
     <nav>
-        <v-app-bar flat app color="transparent">
+        <v-app-bar
+        app 
+        flat 
+        color="grey lighten-3"
+        :collapse="!collapseOnScroll"
+        :collapse-on-scroll="collapseOnScroll"
+        >
             <v-app-bar-nav-icon @click="drawer = !drawer" class="white ml-1" elevation="2"></v-app-bar-nav-icon>
             <v-app-bar-title class="text-uppercase black--text">
                 <span class="font-weight-light">black</span>
@@ -22,14 +28,15 @@
                     </v-avatar>
                 </v-flex>
             </v-layout>
-            <v-list>
-                <v-list-item v-for="item in items" :key="item.text" router :to="item.route">
+            <v-list dense nav>
+                <v-list-item v-for="item in items" :key="item.text" router :to="item.route" class="tile">
                     <v-list-item-icon>
                         <v-icon> {{ item.icon }} </v-icon>
                     </v-list-item-icon>
                     <v-list-item-content class="subtitle-1">{{ item.text }}</v-list-item-content>
                 </v-list-item>
                 <v-list-group
+                class="tile"
                 :value="false"
                 prepend-icon="mdi-hammer-screwdriver"
                 >
@@ -52,6 +59,12 @@
         </v-navigation-drawer>
     </nav>
 </template>
+<style scoped>
+  .tile {
+    margin: 10px;
+    border-radius: 6px;
+  }
+</style>
 
 <script>
     import { supabase } from '@/supabase'
@@ -60,6 +73,7 @@
         data(){
             return {
                 drawer : true,
+                collapseOnScroll: true,
                 items: [
                     {icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/'},
                     {icon: 'mdi-coffee', text: 'Items', route: '/items'},
@@ -83,29 +97,6 @@
             }
         }
     }
-
-
-//      <v-list-group
-//               v-model="item.active"
-//               v-for="item in items"
-//               :key="item.title"
-//               :prepend-icon="item.action"
-//               no-action
-//             >
-//               <v-list-tile slot="activator">
-//                 <v-list-tile-content>
-//                   <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-//                 </v-list-tile-content>
-//               </v-list-tile>
-//               <v-list-tile v-for="subItem in item.items" :key="subItem.title" ripple @click="close">
-//                 <v-list-tile-content>
-//                   <v-list-tile-title>{{ subItem.title }}</v-list-tile-title>
-//                 </v-list-tile-content>
-//                 <v-list-tile-action>
-//                   <v-icon>{{ subItem.action }}</v-icon>
-//                 </v-list-tile-action>
-//               </v-list-tile>
-//      </v-list-group>
 </script>
 
 
