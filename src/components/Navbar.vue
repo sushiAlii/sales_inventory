@@ -82,7 +82,6 @@
                 settings: [
                     {icon: 'mdi-account-settings', text: 'Account', route: '/settings/accounts'},
                     {icon: 'mdi-account-cog', text: 'Manage Accounts', route: '/settings/manage_accounts'},
-                    {icon: 'mdi-cogs', text: 'Miscellaneous', route: '/settings/miscellaneous'},
                 ],
                 active: true,
             }
