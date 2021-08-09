@@ -5,7 +5,8 @@
                 <v-breadcrumbs :items="items" large>
                     <template v-slot:item="{ item }">
                     <v-breadcrumbs-item
-                        :href="item.href"
+                        router
+                        :to="item.href"
                         :disabled="item.disabled"
                         
                     >
