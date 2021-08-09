@@ -185,6 +185,7 @@
                         role_name
                     )
                     `)
+                .eq('id',user.id)
 
                 console.log(user);
                 if(error){
