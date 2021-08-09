@@ -5,7 +5,7 @@
             <v-row class="my-15">
                 <v-col
                     cols="12"
-                    md="8"
+                    md="9"
                 >
                     <base-material-chart-card
                         :data="inventoryChart.data"
@@ -77,11 +77,11 @@
                     <base-material-stats-card
                         color="warning"
                         icon="mdi-battery-low"
-                        title="Remaining"
+                        v-bind:title="lowest_stock.item_name"
                         v-bind:value="lowest_stock.quantity"
                         sub-icon="mdi-alert"
                         sub-icon-color="red"
-                        v-bind:sub-text="lowest_stock.item_name"
+                        sub-text="Lowest Item Stock..."
                     />
                 </v-col>
             </v-row>
@@ -102,7 +102,7 @@
                 <v-col
                     
                     cols="12"
-                    md="8"
+                    md="9"
                 >
                     <base-material-chart-card
                         :data="operationChart.data"
@@ -291,7 +291,7 @@
                             this.quantity[i] = item_inventory_chart[i].quantity
                         }
                         this.removeNullValue(this.quantity)
-                        console.log(this.quantity)
+                        this.inventoryChart.options.high = this.getMaxValue(this.quantity)
                         this.inventoryChart.data.labels = this.item_name
                         this.inventoryChart.data.series[0] = this.quantity
                     }
@@ -313,6 +313,8 @@
                             this.op_quantity[i] = item_operation_chart[i].quantity
                         }
                         this.removeNullValue(this.op_quantity)
+                        console.log(this.op_quantity)
+                        this.operationChart.options.high = this.getMaxValue(this.op_quantity)
                         this.operationChart.data.labels = this.op_item_name
                         this.operationChart.data.series[0] = this.op_quantity
                     }
@@ -360,6 +362,16 @@
                         array[i] = 0
                     }
                 }
+            },
+            getMaxValue(array){
+                let max = 0
+                for(let i=0;i<array.length;i++){
+                    if(array[i] > max){
+                        max = array[i]
+                    }
+                }
+                console.log(max)
+            return max = max + (max/2)
             }
         }
     }
