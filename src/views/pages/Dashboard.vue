@@ -85,7 +85,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row class="mb-5">
                 <v-col
                 cols="12"
                 md="3"
