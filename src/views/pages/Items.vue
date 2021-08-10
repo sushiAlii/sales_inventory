@@ -122,13 +122,16 @@
                             >
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-btn 
-                                        x-small
+                                        small
                                         @click.prevent="onButtonClick(item)"
-                                        color="blue lighten-2"
                                         v-bind="attrs"
                                         v-on="on"
+                                        icon
                                     >
-                                        Action
+                                        <v-icon>
+                                            mdi-circle-edit-outline
+                                        </v-icon>
+                                        
                                     </v-btn>
                                 </template>
                                 <v-card>
@@ -252,7 +255,7 @@
                 </v-card>
                 <base-material-snackbar
                     v-model="snackbars.fail"
-                    type="warning"
+                    type="error"
                     >
                     <span class="font-weight-bold">&nbsp;FAILED&nbsp;</span> in deleting the item! - 
                     You can only delete an item that has no <span class="font-weight-bold">&nbsp;STOCK&nbsp;</span> 
