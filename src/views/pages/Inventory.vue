@@ -21,7 +21,9 @@
                         max-width="700px"
                     >
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn
+                        
+                            
+                                <v-btn
                                 color="white"
                                 fab
                                 small
@@ -31,6 +33,7 @@
                             >
                                 <v-icon>mdi-plus-circle-outline</v-icon> 
                             </v-btn> 
+                            
                         </template>
                         <v-card>
                             <v-card-title>
@@ -349,6 +352,7 @@
 
 <script>
     import Navbar from '@/components/Navbar'
+    import moment from 'moment'
     import { supabase } from '@/supabase'
 
     export default {
@@ -445,8 +449,8 @@
             await this.loadItems()
             await this.loadCurrentBatch()
         },
-        async mounted(){
-            await this.loadInventory()
+        mounted(){
+            
         },
         methods: {
             async loadInventory () {
@@ -454,6 +458,11 @@
                     .from('stock')
                     .select('*')
                     .order('date_received', { ascending: true })
+
+                for(let i = 0 ;i<data.length;i++){
+                    data[i].date_received = moment(data[i].date_received).format('MMMM Do YYYY, h:mm a')
+                    data[i].expiration_date = moment(data[i].expiration_date).format('MMMM Do YYYY')
+                }
 
                 if(error){
                     console.log(error)
