@@ -78,6 +78,7 @@
                     {icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/'},
                     {icon: 'mdi-coffee', text: 'Items', route: '/items'},
                     {icon: 'mdi-cube', text: 'Inventory', route: '/inventory'},
+                    {icon: 'mdi-store', text: 'Operations', route: '/operations'},
                 ],
                 settings: [
                     {icon: 'mdi-account-settings', text: 'Account', route: '/settings/accounts'},

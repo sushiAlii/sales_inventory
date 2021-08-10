@@ -2,71 +2,79 @@
     <v-main>
         <navbar />
             <v-container>
-                <v-breadcrumbs :items="items" large>
-                    <template v-slot:item="{ item }">
-                    <v-breadcrumbs-item
-                        router
-                        :to="item.href"
-                        :disabled="item.disabled"
-                        
-                    >
-                        {{ item.text.toUpperCase() }}
-                    </v-breadcrumbs-item>
-                    </template>
-                </v-breadcrumbs>
-                <div 
-                    class="my-4 mr-4 d-flex flex-row-reverse"
-                >
-                    <v-row>
-                        <v-col
-                            cols="12"
-                            sm="4"
-                            md="4"
-                        >
-                            <v-menu
-                                v-model="menu"
-                                ref="menu"
-                                :close-on-content-click="false"
-                                :return-value.sync="date"
-                                transition="scale-transition"
-                                offset-y
-                                min-width="auto"
+                <v-row>
+                    <v-col>
+                        <v-breadcrumbs :items="items" large>
+                            <template v-slot:item="{ item }">
+                            <v-breadcrumbs-item
+                                router
+                                :to="item.href"
+                                :disabled="item.disabled"
+                                
                             >
-                                <template v-slot:activator="{ on, attrs }">
-                                <v-text-field
-                                    v-model="dateRangeText"
-                                    label="Date Range"
-                                    prepend-icon="mdi-calendar"
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
-                                ></v-text-field>
-                                </template>
-                                <v-date-picker
-                                    v-model="dates"
-                                    range
-                                    width="300"
-                                >
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                        text
-                                        color="primary"
-                                        @click="menu = false"
-                                    >
-                                        Cancel
-                                    </v-btn>
-                                    <v-btn
-                                        text
-                                        color="primary"
-                                        @click="loadNewOperations"
-                                    >
-                                        OK
-                                    </v-btn>
-                                </v-date-picker>
-                            </v-menu>
-                            </v-col>
-                    </v-row>
-                </div>
+                                {{ item.text.toUpperCase() }}
+                            </v-breadcrumbs-item>
+                            </template>
+                        </v-breadcrumbs>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col></v-col>
+                    <v-col
+                        cols="12"
+                        md="2"
+                    >
+                        <v-menu
+                        v-model="menu"
+                        ref="menu"
+                        :close-on-content-click="false"
+                        :return-value.sync="date"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                            v-model="dateRangeText"
+                            label="Date Range"
+                            prepend-icon="mdi-calendar"
+                            format="MM/DD/yyyy"
+                            readonly 
+                            filled
+                            outlined
+                            dense
+                            v-bind="attrs"
+                            v-on="on"
+                            @clear:clear="clear"
+                        ></v-text-field>
+                        </template>
+                        <v-date-picker
+                            v-model="dates"
+                            range
+                            width="300"
+                            
+                        >
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                text
+                                color="primary"
+                                @click="menu = false"
+                            >
+                                Cancel
+                            </v-btn>
+                            <v-btn
+                                text
+                                color="primary"
+                                @click="loadNewOperations"
+                            >
+                                OK
+                            </v-btn>
+                        </v-date-picker>
+                    </v-menu>
+                    </v-col>
+                </v-row>
+                            
+                        
                 <v-card>
                     <v-card-title>
                         <v-text-field
@@ -90,6 +98,7 @@
 
 <script>
     import Navbar from '@/components/Navbar'
+    import moment from 'moment'
     import { supabase } from '@/supabase'
 
     export default {
@@ -168,7 +177,7 @@
         },
         computed: {
             dateRangeText () {
-                return this.dates.join(' ~ ')
+                return this.dates.join(' - ')
             },
         },
         methods: {
@@ -194,16 +203,24 @@
                         date_end: this.dates[1], 
                         date_start: this.dates[0]
                     })
-
-                    if (error) console.error(error)
-                    else this.operations = data;
+                    if (error) {
+                        console.error(error)
+                    }else {
+                        console.log('Data: ' + data[0].item_size)
+                        this.operations = data;
+                        console.log("New Operation: " + this.operations)
+                    }
                 this.menu=false;
+                
             },
             getCurrentDate(){
                 const today = new Date();
                     const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-                    this.current_date = date;
-                    
+                    this.current_date = date;    
+            },
+            clear(){
+                console.log('Date Picker Cleared!')
+                console.log(this.dateRangeText)
             },
         }
 
