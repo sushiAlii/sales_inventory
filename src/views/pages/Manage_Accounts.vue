@@ -7,7 +7,7 @@
                 <v-col
                     cols="12"
                     md="4"
-                    sm="4"
+                    sm="12"
                     v-for="profile in profiles"
                     :key="profile.id"
                 >
@@ -145,15 +145,7 @@
                         ]
                     }
                 },
-                profiles: [
-                    {
-                        id: '',
-                        first_name: '',
-                        last_name: '',
-                        avatar_url: '',
-                        role_name: '',
-                    }
-                ],
+                profiles: [],
             }
         },
         mounted(){
@@ -179,32 +171,17 @@
             },
             async loadUsers(){
                 try{
+                    
                     let { data: profiles, error } = await supabase
-                    .from('profiles')
-                    .select(`
-                        id, 
-                        first_name, 
-                        last_name, 
-                        about_me, 
-                        avatar_url,
-                        roles(
-                            role_name
-                        )
-                    `)
+                        .from('profiles_view')
+                        .select('*')
+
 
                     if(error){
                         console.log('Failed to load Users')
                     }else{
                         console.log('Users Retrieved Successfully!')
-                        console.log(profiles)
-                        for(let i = 0;i<profiles.length;i++){
-                            this.profiles[i].id = profiles[i].id
-                            this.profiles[i].first_name = profiles[i].first_name
-                            this.profiles[i].last_name = profiles[i].last_name
-                            this.profiles[i].about_me = profiles[i].about_me
-                            this.profiles[i].avatar_url = profiles[i].avatar_url
-                            this.profiles[i].role_name = profiles[i].roles.role_name
-                        }
+                        this.profiles = profiles
                     }
                 }catch(error){
                     console.log(error)
