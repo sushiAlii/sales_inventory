@@ -355,7 +355,12 @@
                     console.log(error)
                 }
             },
-
+            async getInventoryRecentDate(){
+                let { data, error } = await supabase
+                    .from('stock_inventory')
+                    .select('date_received')
+                     
+            },
             removeNullValue(array){
                 for(let i = 0; i<array.length;i++){
                     if(array[i] == undefined){
