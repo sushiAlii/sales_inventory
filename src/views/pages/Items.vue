@@ -2,7 +2,7 @@
     <v-main>
         <navbar />
             <v-container>
-                <h1>Items</h1>
+                
                 <v-spacer></v-spacer>
                 <div class="my-4 mr-4 d-flex flex-row-reverse">
                     <v-dialog
