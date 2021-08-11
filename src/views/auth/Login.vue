@@ -70,7 +70,7 @@
                                             </v-col>
                                         </v-row>
                                     </v-form>
-                                </v-col>
+                                
                         </v-row>
                     </v-card>
                 </v-row>
