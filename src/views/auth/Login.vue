@@ -1,54 +1,73 @@
 <template>
-    <v-main>
-        <!-- xs12 and sm12 to make it responsive = 12 columns on mobile and 6 columns from medium to XL layouts -->
-        <v-row xs12 sm12 md6>
-            <v-col
-            class="mr-n3"
-            cols="12"
-            md="6"
+        <v-main class="login-page">
+            <v-container
+                fill-height
+                fluid
             >
-            <!-- Login form here -->
-            <v-card class="elevation-1">
-                <v-card-title class="justify-center">
-                    Login
-                </v-card-title>
-                <v-form class="mx-15" @submit.prevent="handleLogin">
-                    <v-text-field
-                    label="Email"
-                    name="email"
-                    prepend-icon="mdi-email"
-                    type="text"
-                    color="black"
-                    v-model="formData.email"
-                    />
+                <v-row
+                    align="center"
+                    justify="center"
+                >
+                    <v-card 
+                        class="elevation-1"
+                        max-width="500px"
+                        dark
+                    >
+                        <v-row
+                            class="mx-6"
+                        >
+                                <v-col
+                                    class="ml-n4"
+                                    cols="12"
 
-                    <v-text-field
-                    label="Password"
-                    name="password"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                    color="black"
-                    v-model="formData.password"
-                    />
-                    <div class="text-center mt-3">
-                        <v-btn class="my-10" color="black" dark type="submit">SIGN IN</v-btn>
-                    </div>  
-                </v-form>
-            </v-card>
-            </v-col>
-            <v-col
-                
-                cols="12"
-                md="6"
-            >
-                    <!-- artwork here -->
-                <v-card>
-                    <v-img
-                        src="https://images.pexels.com/photos/4195409/pexels-photo-4195409.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                    ></v-img>
-                </v-card>
-            </v-col>
-        </v-row>
+                                >
+                                    <v-card-title
+                                        class="heading-6"
+                                    >
+                                        Welcome back!
+                                    </v-card-title>
+                                </v-col>
+                                <v-col
+                                    cols="12"
+                                >
+                                    <v-form class="" @submit.prevent="handleLogin">
+                                        <v-row>
+                                            <v-col
+                                                cols="12"
+                                                md="12"
+                                            >
+                                                <v-text-field
+                                                label="Email"
+                                                name="email"
+                                                prepend-icon="mdi-email"
+                                                type="text"
+                                                color="white"
+                                                v-model="formData.email"
+                                                />
+                                            </v-col>
+                                            <v-col
+                                                cols="12"
+                                                md="12"
+                                            >
+                                                <v-text-field
+                                                label="Password"
+                                                name="password"
+                                                prepend-icon="mdi-lock"
+                                                type="password"
+                                                color="white"
+                                                v-model="formData.password"
+                                                />
+                                            </v-col>
+                                        </v-row>
+                                        <div class="text-center mt-3">
+                                            <v-btn class="my-10" color="black" dark type="submit">SIGN IN</v-btn>
+                                        </div>  
+                                    </v-form>
+                                </v-col>
+                        </v-row>
+                    </v-card>
+                </v-row>
+            </v-container>
     </v-main>
 </template>
 
@@ -61,6 +80,11 @@
 
         data () {
             return {
+                alignments: [
+                    'start',
+                    'center',
+                    'end',
+                ],
                 formData: {
                     email: '',
                     password: '',
@@ -84,39 +108,15 @@
     }
 </script>
 
-
-<v-layout row wrap>
-      <!-- xs12 and sm12 to make it responsive = 12 columns on mobile and 6 columns from medium to XL layouts -->
-      <v-flex xs12 sm12 md6>
-        <!-- Login form here -->
-      </v-flex>
-      <v-flex xs12 sm12 md6>
-        <!-- artwork here -->
-      </v-flex>
-    </v-layout>
-
-    <v-row align="center" justify="center">
-            <v-col cols="12" sm="3" md="3" lg="3"> 
-                <v-card class="elevation-3">
-                    <v-card-title class="justify-center">
-                        Login
-                    </v-card-title>
-                    <v-form @submit.prevent="" class="mx-6">
-                        <v-text-field
-                        label="Username"
-                        name="username"
-                        prepend-icon="mdi-email"
-                        type="text"
-                        color="black"
-                        />
-                        <v-text-field
-                        label="Password"
-                        name="password"
-                        prepend-icon="mdi-lock"
-                        type="password"
-                        color="black"
-                        />
-                    </v-form>
-                </v-card>
-            </v-col>
-        </v-row>
+<style>
+    .login-page{
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        margin: 0;
+        padding: 0;
+        background-image: url("https://images.pexels.com/photos/4195409/pexels-photo-4195409.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260");
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+</style>
