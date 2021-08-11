@@ -60,7 +60,7 @@
                                             </v-col>
                                         </v-row>
                                         <div class="text-center mt-3">
-                                            <v-btn class="my-10" color="black" dark type="submit">SIGN IN</v-btn>
+                                            <v-btn class="my-10" color="success" light type="submit">SIGN IN</v-btn>
                                         </div>  
                                     </v-form>
                                 </v-col>
@@ -115,7 +115,7 @@
         max-height: 100%;
         margin: 0;
         padding: 0;
-        background-image: url("https://images.pexels.com/photos/4195409/pexels-photo-4195409.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260");
+        background-image: url("https://images.pexels.com/photos/704982/pexels-photo-704982.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
         background-size: 100% 100%;
         background-repeat: no-repeat;
     }
