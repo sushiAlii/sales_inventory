@@ -14,7 +14,7 @@
                         dark
                     >
                         <v-row
-                            class="mx-15"
+                            class="mx-10"
                         >
                                 <v-col
                                     class="ml-n4"
@@ -40,6 +40,9 @@
                                                 label="Email"
                                                 name="email"
                                                 prepend-icon="mdi-email"
+                                                dense
+                                                outlined
+                                                filled
                                                 type="text"
                                                 color="white"
                                                 v-model="formData.email"
@@ -53,6 +56,9 @@
                                                 label="Password"
                                                 name="password"
                                                 prepend-icon="mdi-lock"
+                                                dense
+                                                outlined
+                                                filled
                                                 type="password"
                                                 color="white"
                                                 v-model="formData.password"
