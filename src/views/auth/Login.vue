@@ -39,7 +39,7 @@
                                                 <v-text-field
                                                 label="Email"
                                                 name="email"
-                                                prepend-icon="mdi-email"
+                                                append-icon="mdi-email"
                                                 dense
                                                 outlined
                                                 filled
@@ -55,7 +55,7 @@
                                                 <v-text-field
                                                 label="Password"
                                                 name="password"
-                                                prepend-icon="mdi-lock"
+                                                append-icon="mdi-lock"
                                                 dense
                                                 outlined
                                                 filled
