@@ -13,7 +13,7 @@
                 <span>scoop</span>
             </v-app-bar-title>
             <v-spacer></v-spacer>
-            <v-btn class = "mr-4" icon small @click.prevent="handleLogout">
+            <v-btn class = "mr-4" color="black" icon x-small @click.prevent="handleLogout">
                 <v-icon right>mdi-logout</v-icon>
             </v-btn>
         </v-app-bar>
