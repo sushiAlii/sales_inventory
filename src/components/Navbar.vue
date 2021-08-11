@@ -13,26 +13,25 @@
                 <span>scoop</span>
             </v-app-bar-title>
             <v-spacer></v-spacer>
-            <v-btn class = "mr-4" color="black" icon x-small @click.prevent="handleLogout">
-                <v-icon right>mdi-logout</v-icon>
-            </v-btn>
+        
         </v-app-bar>
 
         <!--        NAVIGATION DRAWER -->
-        <v-navigation-drawer class="black" v-model="drawer" app dark>
+        <v-navigation-drawer class="nav-drawer" v-model="drawer" app dark>
             <v-layout column align-center>
                 <v-flex class="mt-5">
                     <v-avatar size="100">
-                        <img src="/logo.jpg" alt="">
+                        
                     </v-avatar>
                 </v-flex>
             </v-layout>
+            <v-divider class="white mx-4"></v-divider>
             <v-list dense nav>
                 <v-list-item v-for="item in items" :key="item.text" router :to="item.route" class="tile">
                     <v-list-item-icon>
                         <v-icon> {{ item.icon }} </v-icon>
                     </v-list-item-icon>
-                    <v-list-item-content class="subtitle-1">{{ item.text }}</v-list-item-content>
+                    <v-list-item-content class="subtitle-2">{{ item.text }}</v-list-item-content>
                 </v-list-item>
                 <v-list-group
                 class="tile"
@@ -40,7 +39,7 @@
                 prepend-icon="mdi-hammer-screwdriver"
                 >
                     <template v-slot:activator>
-                        <v-list-item-title class="subtitle-1">Settings</v-list-item-title>
+                        <v-list-item-title class="subtitle-2">Settings</v-list-item-title>
                     </template>
                     <v-list-item 
                     v-for="setting in settings" 
@@ -54,6 +53,13 @@
                         </v-list-item-icon>
                     </v-list-item>
                 </v-list-group>
+                
+                <v-list-item class="tile" @click="handleLogout">
+                    <v-list-item-icon>
+                        <v-icon color="red">mdi-power-plug-off</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content class="subtitle-2 red--text darken-2" > Logout </v-list-item-content>
+                </v-list-item>
             </v-list>
         </v-navigation-drawer>
     </nav>
@@ -98,4 +104,16 @@
     }
 </script>
 
+<style>
+    .nav-drawer{
+        width: 100%;
+        height: 100%;
+        /* background-image: url("https://images.pexels.com/photos/2387793/pexels-photo-2387793.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"); */
+        /* background-image: url("https://images.pexels.com/photos/1624496/pexels-photo-1624496.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"); */
+        background-image: url("https://images.pexels.com/photos/1366957/pexels-photo-1366957.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
+        /* background-image: url("https://images.pexels.com/photos/2106768/pexels-photo-2106768.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940") */
+    }
+</style>
 
+
+// https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500
