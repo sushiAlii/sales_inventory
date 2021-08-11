@@ -40,7 +40,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                 
-                    <div class= "d-flex justify-center">
+                    <div class= "d-flex justify-start">
                         <v-btn
                             depressed
                             color="success"
