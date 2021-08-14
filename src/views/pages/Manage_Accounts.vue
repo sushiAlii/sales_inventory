@@ -15,7 +15,7 @@
                     class="v-card-profile"
                     v-bind:avatar= "profile.avatar_url"
                     >
-                    <v-card-text class="text-center">
+                    <v-card-text class="text-center" style="overflow-y: auto; height:250px">
                         <h6 class="display-1 mb-1 grey--text">
                             {{ profile.role_name }}
                         </h6>
@@ -28,11 +28,33 @@
                             {{ profile.about_me }}
                         </p>
                     </v-card-text>
+                        <v-card-actions
+                            class="mb-n4"
+                            v-if="user_profile.roles.role_name != 'Staff'"
+                        >
+                            <v-btn
+                                color="red darken-2"
+                                text
+                                @click="reserve"
+                            >
+                                Delete
+                            </v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                color="deep-purple lighten-2"
+                                text
+                                @click="selectItem"
+                            >
+                                Edit
+                            </v-btn>
+                        </v-card-actions>
                     </base-material-card>
                 </v-col>
             </v-row>
         </v-container>
-        <v-container>
+        <v-container
+            v-if="user_profile.roles.role_name != 'Staff'"
+        >
             <v-dialog
                 v-model="dialog"
                 persistent
@@ -87,7 +109,6 @@
                             </v-row>
                         </v-form>
                     </v-container>
-                    <small>*indicates required field</small>
                     </v-card-text>
                     <v-card-actions>
                     <v-spacer></v-spacer>
@@ -115,6 +136,7 @@
 <script>
     import Navbar from '@/components/Navbar'
     import MaterialCard from '@/components/MaterialCard.vue'
+    import { mapGetters } from 'vuex'
     import { supabase } from '@/supabase'
 
 
@@ -151,6 +173,12 @@
         mounted(){
             this.loadUsers()
         },
+        computed:{
+            ...mapGetters({
+                user: 'getUser',
+                user_profile: 'getProfile'
+            })
+        },
         methods: {
             async handleRegister () {
                 try{
@@ -186,6 +214,9 @@
                 }catch(error){
                     console.log(error)
                 }
+            },
+            selectItem(){
+                console.log(profile.id)
             },
             reset () {
                 console.log('reset')
