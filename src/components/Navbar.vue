@@ -32,17 +32,33 @@
                         alt=""
                     ></v-img>
                     </v-avatar>
-                </v-col>
+                </v-col>        
+            </v-row>
+            <v-row>
+                    <v-col
+                        align="center"
+                        class="mb-n5 mt-n4"
+                        cols="12"
+                        md="12"
+                    >
+                        <p class="white--text subheading">
+                            {{ profile.first_name + " " + profile.last_name}}
+                        </p>
+                    
+                    </v-col>
+            </v-row>
+            <v-row>
                 <v-col
-                    align="center"
-                    cols="12"
-                    md="12"
-                >
-                     <p class="white--text subheading mt-1">
-                         
-                    </p>
-                
-                </v-col>
+                        align="center"
+                        class="mt-n4"
+                        cols="12"
+                        md="12"
+                    >
+                        <p class="white--text subheading">
+                            {{ profile.roles.role_name}}
+                        </p>
+                    
+                    </v-col>
             </v-row>
                
             <v-divider class="white mx-4"></v-divider>
