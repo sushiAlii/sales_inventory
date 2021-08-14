@@ -46,7 +46,7 @@ const routes = [
   },
   {
     path: '/settings/accounts',
-    name: 'Accounts',
+    name: 'Account',
     meta: { requiresAuth: true },
     component: Accounts
   },
