@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 import router from '../router'
 import { supabase } from '../supabase'
 
@@ -78,5 +79,8 @@ export default new Vuex.Store({
     },
   },
   modules: {
-  }
+  },
+  plugins: [
+    createPersistedState()
+  ]
 })
