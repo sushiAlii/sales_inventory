@@ -1,7 +1,9 @@
 <template>
     <v-main>
         <navbar />
-        <v-container>
+        <v-container
+            tag="section"
+        >
             <v-row class="my-15">
                 <v-col
                     cols="12"

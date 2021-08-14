@@ -3,7 +3,6 @@
         <nav-bar />
         <v-container
             id="user-profile"
-            fluid
             tag="section"
         >
             <v-row justify="center">
@@ -191,6 +190,7 @@
                 if(error){
                     console.log(error)
                 }else{
+
                     console.log('User Retrieved!')
                     this.user = user
                     this.profile.email = user.email

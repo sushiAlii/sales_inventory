@@ -5,8 +5,8 @@
                 fluid
             >
                 <v-row
-                    align="center"
                     justify="center"
+                    align="center"
                 >
                     <v-card 
                         class="elevation-10"
@@ -80,6 +80,7 @@
 
 <script>
     import { supabase } from '@/supabase'
+    import { Store } from "vuex";
 
 
     export default {
@@ -101,14 +102,16 @@
         },
         methods: {
             async handleLogin () {
-                console.log("hi");
-                const { user, error } = await supabase.auth.signIn({
-                    email: this.formData.email,
-                    password: this.formData.password
-                }).then(response => {
-                    console.log(response);
-                    this.$router.push('/')
-                })
+                // console.log("hi");
+                // const { user, error } = await supabase.auth.signIn({
+                //     email: this.formData.email,
+                //     password: this.formData.password
+                // }).then(response => {
+                //     console.log(response);
+                //     this.$router.push('/')
+                // })
+                this.$store.dispatch("signInAction", this.formData)
+
             },
         }
         
