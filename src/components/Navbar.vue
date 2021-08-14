@@ -39,7 +39,7 @@
                     md="12"
                 >
                      <p class="white--text subheading mt-1">
-                        {{ profile.roles.role_name }}
+                         
                     </p>
                 
                 </v-col>
