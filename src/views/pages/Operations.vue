@@ -2,22 +2,7 @@
     <v-main>
         <navbar />
             <v-container>
-                <v-row>
-                    <v-col>
-                        <v-breadcrumbs :items="items" large>
-                            <template v-slot:item="{ item }">
-                            <v-breadcrumbs-item
-                                router
-                                :to="item.href"
-                                :disabled="item.disabled"
-                                
-                            >
-                                {{ item.text.toUpperCase() }}
-                            </v-breadcrumbs-item>
-                            </template>
-                        </v-breadcrumbs>
-                    </v-col>
-                </v-row>
+                
                 <v-row>
                     <v-col></v-col>
                     <v-col
@@ -37,7 +22,7 @@
                         <v-text-field
                             v-model="dateRangeText"
                             label="Date Range"
-                            prepend-icon="mdi-calendar"
+                            prepend-inner-icon="mdi-calendar"
                             format="MM/DD/yyyy"
                             readonly 
                             filled

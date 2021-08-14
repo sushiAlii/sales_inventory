@@ -2,27 +2,70 @@
     <v-main>
         <navbar />
             <v-container>
-                <v-breadcrumbs :items="items" large>
-                    <template v-slot:item="{ item }">
-                    <v-breadcrumbs-item
-                        router
-                        :to="item.href"
-                        :disabled="item.disabled"
+                    <v-row
                         
+                        justify="end"
                     >
-                        {{ item.text.toUpperCase() }}
-                    </v-breadcrumbs-item>
-                    </template>
-                </v-breadcrumbs>
-                <div class="my-4 mr-4 d-flex flex-row-reverse">
-                <v-dialog
-                        v-model="dialog"
-                        persistent
-                        max-width="700px"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                        
-                            
+                        <v-col
+                            cols="12"
+                            md="2"
+                            sm="3"
+                        >
+                            <v-menu
+                                ref="menu2"
+                                v-model="menu2"
+                                :close-on-content-click="false"
+                                :return-value.sync="date2"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="auto"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="date2"
+                                    label="Date"
+                                    prepend-inner-icon="mdi-calendar"
+                                    outlined
+                                    dense
+                                    filled
+                                    readonly
+                                    v-bind="attrs"
+                                    v-on="on"
+                                ></v-text-field>
+                                </template>
+                                <v-date-picker
+                                v-model="date2"
+                                no-title
+                                scrollable
+                                >
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    @click="menu2 = false"
+                                >
+                                    Cancel
+                                </v-btn>
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    @click="getFilteredData"
+                                >
+                                    OK
+                                </v-btn>
+                                </v-date-picker>
+                            </v-menu>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            md="1"
+                        >
+                            <v-dialog
+                                v-model="dialog"
+                                persistent
+                                max-width="700px"
+                            >
+                        <template v-slot:activator="{ on, attrs }">    
                                 <v-btn
                                 color="white"
                                 fab
@@ -50,112 +93,114 @@
                                             md="2"
                                             sm="2"
                                         >
-                                            <v-text-field
+                                        <v-text-field
                                             label="Batch"
                                             v-model="batch"
                                             outlined
                                             disabled
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                  
-                                            <v-btn
-                                                color="secondary"
-                                                fab
-                                                x-small
-                                                
-                                                :disabled="disable"
-                                                @click="incrementBatch"
-                                            >
-                                                <v-icon>mdi-plus</v-icon>
-                                            </v-btn>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col 
-                                            cols="12"
-                                            md="6"
-                                            sm="6"
                                         >
-                                            <v-select
-                                                label="Item"
-                                                :items="item_list"
-                                                v-model="item"
-                                                required
-                                            >
-                                            </v-select>
-                                        </v-col>
-                                        <v-col 
-                                            cols="12"
-                                            md="4"
-                                            sm="4"
-                                        >
-                                            <v-text-field
-                                                label="Quantity"
-                                                v-model="quantity"
-                                                required
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                        <v-col
-                                            cols="12"
-                                            md="4"
-                                            sm="4"
-                                        >
-                                            <v-menu
-                                                ref="menu"
-                                                v-model="menu"
-                                                :close-on-content-click="false"
-                                                transition="scale-transition"
-                                                offset-y
-                                                min-width="auto"
-                                            >
-                                                <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field
-                                                        label="Expiration Date"
-                                                        v-model="date"
-                                                        prepend-icon="mdi-calendar"
-                                                        readonly
-                                                        v-bind="attrs"
-                                                        v-on="on"
-                                                    >
-                                                    </v-text-field>
-                                                </template>
-                                                <v-date-picker
-                                                    v-model="date"
-                                                    :active-picker.sync="activePicker"
-                                                    :min="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
-                                                    max="2050-01-01"
-                                                    @change="save"
+                                        </v-text-field>
+                                            </v-col>
+                    
+                                                <v-btn
+                                                    color="secondary"
+                                                    fab
+                                                    x-small
+                                                    
+                                                    :disabled="disable"
+                                                    @click="incrementBatch"
                                                 >
-                                                </v-date-picker>   
-                                            </v-menu> 
-                                        </v-col>
-                                    </v-row>
-                                </v-form>
-                                </v-container>
-                            <small>*indicates required field</small>
-                            </v-card-text>
-                            <v-card-actions>
-                            <v-spacer></v-spacer>
-                                <v-btn
-                                    color="black"
-                                    text
-                                    @click="resetForm"
-                                >
-                                    Close
-                                </v-btn>
-                                <v-btn
-                                    color="black"
-                                    text
-                                    @click.prevent="addInventory"
-                                >
-                                    Add
-                                </v-btn>
-                            </v-card-actions>
-                            
-                        </v-card>
-                    </v-dialog>
-                </div>
+                                                    <v-icon>mdi-plus</v-icon>
+                                                </v-btn>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col 
+                                                cols="12"
+                                                md="6"
+                                                sm="6"
+                                            >
+                                                <v-select
+                                                    label="Item"
+                                                    :items="item_list"
+                                                    v-model="item"
+                                                    required
+                                                >
+                                                </v-select>
+                                            </v-col>
+                                            <v-col 
+                                                cols="12"
+                                                md="4"
+                                                sm="4"
+                                            >
+                                                <v-text-field
+                                                    label="Quantity"
+                                                    v-model="quantity"
+                                                    required
+                                                >
+                                                </v-text-field>
+                                            </v-col>
+                                            <v-col
+                                                cols="12"
+                                                md="4"
+                                                sm="4"
+                                            >
+                                                <v-menu
+                                                    ref="menu"
+                                                    v-model="menu"
+                                                    :close-on-content-click="false"
+                                                    transition="scale-transition"
+                                                    offset-y
+                                                    min-width="auto"
+                                                >
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-text-field
+                                                            label="Expiration Date"
+                                                            v-model="date"
+                                                            prepend-icon="mdi-calendar"
+                                                            readonly
+                                                            v-bind="attrs"
+                                                            v-on="on"
+                                                        >
+                                                        </v-text-field>
+                                                    </template>
+                                                    <v-date-picker
+                                                        v-model="date"
+                                                        :active-picker.sync="activePicker"
+                                                        :min="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                                                        max="2050-01-01"
+                                                        @change="save"
+                                                    >
+                                                    </v-date-picker>   
+                                                </v-menu> 
+                                            </v-col>
+                                        </v-row>
+                                    </v-form>
+                                    </v-container>
+                                <small>*indicates required field</small>
+                                </v-card-text>
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                    <v-btn
+                                        color="black"
+                                        text
+                                        @click="resetForm"
+                                    >
+                                        Close
+                                    </v-btn>
+                                    <v-btn
+                                        color="black"
+                                        text
+                                        @click.prevent="addInventory"
+                                    >
+                                        Add
+                                    </v-btn>
+                                </v-card-actions>
+                                
+                            </v-card>
+                        </v-dialog>
+                        </v-col>
+                    </v-row>
+                
                 <v-card>
                     <v-card-title>
                         <v-text-field
@@ -171,7 +216,7 @@
                         :items="stocks"
                         :search="search"
                     >
-                        <template v-slot:[`item.action`]="{ item }">
+                        <template v-if="filtered==false" v-slot:[`item.action`]="{ item }">
                             <v-dialog
                                 v-model="dialog_2"
                                 max-width="600px"
@@ -368,7 +413,10 @@
                 dialog_2: false,
                 activePicker: null,
                 date: null,
+                date2: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
                 menu: false,
+                menu2: false,
+                filtered: false,
                 disable: false,
                 batch: '',
                 item: '',
@@ -467,6 +515,7 @@
                 if(error){
                     console.log(error)
                 }else{
+                    this.filtered = false
                     console.log('Success Query')
                     this.stocks = data;
                 }
@@ -567,6 +616,32 @@
                 this.transfer_quantity = 1
                 this.dialog_2=false
             },
+            async getFilteredData(){
+                this.save2(this.date2)
+                console.log(this.date2)
+                try{
+                    let { data, error } = await supabase
+                        .rpc('getstockdate', {
+                            date_picked: this.date2
+                        })
+
+                    if(error){
+                        console.log(error)
+                    }else{
+                        for(let i = 0 ;i<data.length;i++){
+                            data[i].date_received = moment(data[i].date_received).format('MMMM Do YYYY, h:mm a')
+                            data[i].expiration_date = moment(data[i].expiration_date).format('MMMM Do YYYY')
+                        }
+                        console.log(data)
+                        this.filtered = true
+                        this.menu2 = false
+                        this.stocks = data
+                        console.log(this.date2)
+                    }
+                }catch(error){
+                    console.log(error)
+                }
+            },
             incrementBatch(){
                 this.batch = this.batch + 1
                 this.disable = true
@@ -574,6 +649,10 @@
             save (date) {
                 this.$refs.menu.save(date)
             },
+            save2 (date2) {
+                this.$refs.menu2.save(date2)
+            },
+            
             getTimestamp(){
                 const today = new Date();
                     const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
