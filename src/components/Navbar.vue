@@ -1,30 +1,50 @@
 <template>
     <nav>
         <v-app-bar
-        app 
-        flat 
-        color="grey lighten-3"
-        :collapse="!collapseOnScroll"
-        :collapse-on-scroll="collapseOnScroll"
+        id="app-bar"
+        app
+        color="transparent"
+        flat
+        height="75"
         >
             <v-app-bar-nav-icon @click="drawer = !drawer" class="white ml-1" elevation="2"></v-app-bar-nav-icon>
-            <v-app-bar-title class="text-uppercase black--text">
-                <span class="font-weight-light">black</span>
-                <span>scoop</span>
-            </v-app-bar-title>
+                <v-app-bar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name">  
+                </v-app-bar-title>
             <v-spacer></v-spacer>
-        
         </v-app-bar>
 
         <!--        NAVIGATION DRAWER -->
         <v-navigation-drawer class="nav-drawer" v-model="drawer" app dark>
-            <v-layout column align-center>
-                <v-flex class="mt-5">
+            <v-row
+            
+                align="center"
+                justify="center"
+            >
+                <v-col
+                    class="mt-5"
+                    align="center"
+                    cols="12"
+                    md="12"
+                >
                     <v-avatar size="100">
-                        
+                    <v-img
+                        :src="profile.avatar_url"
+                        alt=""
+                    ></v-img>
                     </v-avatar>
-                </v-flex>
-            </v-layout>
+                </v-col>
+                <v-col
+                    align="center"
+                    cols="12"
+                    md="12"
+                >
+                     <p class="white--text subheading mt-1">
+                        {{ profile.roles.role_name }}
+                    </p>
+                
+                </v-col>
+            </v-row>
+               
             <v-divider class="white mx-4"></v-divider>
             <v-list dense nav>
                 <v-list-item v-for="item in items" :key="item.text" router :to="item.route" class="tile">
@@ -72,7 +92,7 @@
 </style>
 
 <script>
-    import { supabase } from '@/supabase'
+    import { mapGetters } from 'vuex'
 
     export default{
         data(){
@@ -92,14 +112,24 @@
                 active: true,
             }
         },
+        computed:{
+            ...mapGetters({
+                user: 'getUser',
+                profile: 'getProfile'
+            })
+        },
+        mounted(){
+            console.log("USER " + this.user)
+        },
         methods: {
             async handleLogout () {
-                const {error} = await supabase.auth.signOut()
-                .then(response => {
-                    console.log(response)
-                    this.$router.push('/login')
-                })
-            }
+                // const {error} = await supabase.auth.signOut()
+                // .then(response => {
+                //     console.log(response)
+                //     this.$router.push('/login')
+                // })
+                this.$store.dispatch("signOutAction")
+            },
         }
     }
 </script>
@@ -109,7 +139,6 @@
         width: 100%;
         height: 100%;
         /* background-image: url("https://images.pexels.com/photos/2387793/pexels-photo-2387793.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"); */
-        /* background-image: url("https://images.pexels.com/photos/1624496/pexels-photo-1624496.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"); */
         background-image: url("https://images.pexels.com/photos/1366957/pexels-photo-1366957.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
         /* background-image: url("https://images.pexels.com/photos/2106768/pexels-photo-2106768.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940") */
     }
