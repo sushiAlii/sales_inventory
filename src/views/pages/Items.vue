@@ -42,12 +42,43 @@
                                                 >
                                                 </v-text-field>
                                             </v-col>
-                                            <v-col cols="12">
+                                            <v-col
+                                                cols="12"
+                                                md="12"
+                                            >
+                                                <v-text-field
+                                                    label="Price"
+                                                    type="number"
+                                                    v-model="unit_cost"
+                                                    required
+                                                >
+                                                </v-text-field>
+                                            </v-col>
+                                            <v-col
+                                                jusify="right"
+                                                align="right"
+                                                cols="12"
+                                                md="6"
+                                            >
+                                                <v-btn
+                                                    color="info"
+                                                    @click="custom_unit_field = !custom_unit_field"
+                                                >
+                                                    Add Custom Unit
+                                                </v-btn>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col 
+                                                cols="12"
+                                                md="6"
+                                            >
                                                 <v-text-field
                                                     label="Size"
                                                     type="number"
                                                     v-model="size"
-                                                    required
+                                                    min=1
+                                                    v-bind:disabled="custom_unit_field"
                                                 >
                                                 </v-text-field>
                                             </v-col>
@@ -59,21 +90,9 @@
                                                     :items="units"
                                                     label="Unit"
                                                     v-model="unit_name"
-                                                    required
-                                                >
+                                                    v-bind:disabled="custom_unit_field"
+                                                >  
                                                 </v-select>
-                                            </v-col>
-                                            <v-col
-                                                cols="12"
-                                                md="6"
-                                            >
-                                                <v-text-field
-                                                    label="Unit Cost"
-                                                    type="number"
-                                                    v-model="unit_cost"
-                                                    required
-                                                >
-                                                </v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-form>
@@ -287,10 +306,10 @@
             return {
                 search: '',
                 item_name: '',
-                unit_name: '',
+                unit_name: null,
                 unit_cost: '',
                 unit_id: '',
-                size: '',
+                size: null,
                 dialog: false,
                 dialog_2: false,
                 dialog_3: false,
@@ -299,6 +318,7 @@
                 items: [],
                 row_data: [],
                 disabled_field: true,
+                custom_unit_field: true,
                 snackbars: {
                     success: false,
                     fail: false,
@@ -362,29 +382,47 @@
             async saveItems(){
                 // console.log(this.unit_name)
 
-                for(let i = 0;i<this.units_array.length;i++){
-                    if(this.unit_name == this.units_array[i].unit_name){
-                        this.unit_id = this.units_array[i].id    
-                    }
-                }
-                this.dialog = false
-                const { data, error } = await supabase
+                if(this.unit_name == null){
+                    const { data, error } = await supabase
                     .from('items')
                     .insert([
                         { 
                             item_name: this.item_name, 
-                            size: this.size,
-                            unit_id: this.unit_id,
                             unit_cost: this.unit_cost 
                         },
                     ])
-                if(error){
-                    console.log(error)
+                    this.dialog = false
+                    if(error){
+                        console.log(error)
 
+                    }else{
+                        console.log('Item Registered!')
+                        this.resetForm()
+                    }
                 }else{
-                    console.log('Item Registered!')
-                    this.resetForm()
-                }
+                    for(let i = 0;i<this.units_array.length;i++){
+                        if(this.unit_name == this.units_array[i].unit_name){
+                            this.unit_id = this.units_array[i].id    
+                        }
+                    }   
+                    const { data, error } = await supabase
+                        .from('items')
+                        .insert([
+                            { 
+                                item_name: this.item_name, 
+                                size: this.size,
+                                unit_id: this.unit_id,
+                                unit_cost: this.unit_cost 
+                            },
+                        ])
+                    if(error){
+                        console.log(error)
+
+                    }else{
+                        console.log('Item Registered!')
+                        this.resetForm()
+                    }
+                }                
             }, 
             async editItem(){
                 try{
