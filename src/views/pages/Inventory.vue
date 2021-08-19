@@ -22,21 +22,23 @@
                             >
                                 <template v-slot:activator="{ on, attrs }">
                                 <v-text-field
-                                    v-model="date2"
-                                    label="Date"
+                                    v-model="dateRangeText"
+                                    label="Date Range"
                                     prepend-inner-icon="mdi-calendar"
+                                    format="MM/DD/yyyy"
                                     outlined
                                     dense
                                     filled
                                     readonly
                                     v-bind="attrs"
                                     v-on="on"
+                                    @clear:clear="clear"
                                 ></v-text-field>
                                 </template>
                                 <v-date-picker
-                                v-model="date2"
-                                no-title
-                                scrollable
+                                v-model="dates"
+                                range
+                                width="300"
                                 >
                                 <v-spacer></v-spacer>
                                 <v-btn
@@ -413,7 +415,8 @@
                 dialog_2: false,
                 activePicker: null,
                 date: null,
-                date2: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+                date2: '',
+                dates: ['',''],
                 menu: false,
                 menu2: false,
                 filtered: false,
@@ -424,6 +427,7 @@
                 item_array: '',
                 timestamp: '',
                 quantity: '',
+                initial_quantity: '',
                 transfer_quantity: '',
                 inventory_subscription: undefined,
                 row_data: [],
@@ -443,7 +447,7 @@
                 ],
                 headers: [
                     {
-                        text: 'Batch ID',
+                        text: 'Batch',
                         align: 'start',
                         value: 'batch_id'
                     },
@@ -468,16 +472,24 @@
                         value: 'expiration_date',
                     },
                     {
-                        text: 'Remaining',
+                        text: 'Remaining Stock',
                         value: 'quantity'
                     },
                     {
-                        text: 'Unit Cost',
+                        text: 'Collected Stock',
+                        value: 'initial_quantity'
+                    },
+                    {
+                        text: 'Price',
                         value: 'unit_cost',
                     },
                     {
-                        text: 'Total',
+                        text: 'Cost of Rem. Stock',
                         value: 'total' 
+                    },
+                    {
+                        text: 'Cost of Stock',
+                        value: 'initial_total' 
                     },
                     {
                         text: 'Action',
@@ -499,6 +511,11 @@
         },
         mounted(){
             
+        },
+        computed: {
+            dateRangeText () {
+                return this.dates.join(' - ')
+            },
         },
         methods: {
             async loadInventory () {
@@ -575,13 +592,16 @@
                         date_received: this.timestamp,
                         expiration_date: this.date,
                         quantity: this.quantity, 
-                        total: total
+                        total: total,
+                        initial_quantity: this.quantity,
+                        initial_total: total
                     },
                 ])
                 if(error){
                     console.log(error)
                 }else{
                     console.log('Data Inserted Successfully', data)
+                    
                     this.loadInventory()
                 }
                 this.resetForm()
@@ -610,6 +630,7 @@
                                     total: inventory_total
                                 })
                             .eq('id', this.row_data.id)
+                            
                         this.loadInventory()
                         
                     }
@@ -617,12 +638,12 @@
                 this.dialog_2=false
             },
             async getFilteredData(){
-                this.save2(this.date2)
-                console.log(this.date2)
+                console.log(this.dates)
                 try{
                     let { data, error } = await supabase
                         .rpc('getstockdate', {
-                            date_picked: this.date2
+                            date_start: this.dates[0],
+                            date_end: this.dates[1]
                         })
 
                     if(error){
@@ -674,7 +695,11 @@
             resetForm_2(){
                 this.dialog_2 = false
                 this.transfer_quantity = 1
-            }
+            },
+            clear(){
+                console.log('Date Picker Cleared!')
+                console.log(this.dateRangeText)
+            },
         }
 
     }

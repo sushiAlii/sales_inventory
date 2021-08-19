@@ -9,7 +9,7 @@
                         cols="12"
                         md="2"
                     >
-                        <v-menu
+                    <v-menu
                         v-model="menu"
                         ref="menu"
                         :close-on-content-click="false"
