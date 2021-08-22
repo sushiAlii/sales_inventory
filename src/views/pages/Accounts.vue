@@ -1,139 +1,139 @@
 <template>
-    <v-main>
-        <nav-bar />
-        <v-container
-            id="user-profile"
-            tag="section"
+
+    <v-container
+        id="user-profile"
+        tag="section"
+        fill-height
+        fluid
+    >
+        <v-row class="my-10" justify="center">
+        <v-col
+            cols="12"
+            md="8"
         >
-            <v-row justify="center">
-            <v-col
-                cols="12"
-                md="8"
-            >
-                <base-material-card>
-                <template v-slot:heading>
-                    <div class="display-2 font-weight-light">
-                    Edit Profile
-                    </div>
+            <base-material-card>
+            <template v-slot:heading>
+                <div class="display-2 font-weight-light">
+                Edit Profile
+                </div>
 
-                    <div class="subtitle-1 font-weight-light">
-                    Complete your profile
-                    </div>
-                </template>
+                <div class="subtitle-1 font-weight-light">
+                Complete your profile
+                </div>
+            </template>
 
-                <v-form>
-                    <v-container class="py-0">
-                    <v-row>
-                        <v-col
-                        cols="12"
-                        md="6"
-                        >
-                        <v-text-field
-                            label="Email Address"
-                            class="green-input"
-                            v-model="profile.email"
-                            readonly
-                        />
-                        </v-col>
-                        <v-col
+            <v-form>
+                <v-container class="py-0">
+                <v-row>
+                    <v-col
+                    cols="12"
+                    md="6"
+                    >
+                    <v-text-field
+                        label="Email Address"
+                        class="green-input"
+                        v-model="profile.email"
+                        readonly
+                    />
+                    </v-col>
+                    <v-col
+                    cols="12"
+                    md="3"
+                    >
+                    <v-text-field
+                        label="Role"
+                        class="purple-input"
+                        v-model="profile.role"
+                        readonly
+                    />
+                    </v-col>
+                    <v-col
                         cols="12"
                         md="3"
-                        >
-                        <v-text-field
-                            label="Role"
-                            class="purple-input"
-                            v-model="profile.role"
-                            readonly
-                        />
-                        </v-col>
-                        <v-col
-                            cols="12"
-                            md="3"
-                        >
-                            <v-file-input
-                                :rules="rules"
-                                type="file"
-                                accept="image/png, image/jpeg, image/bmp"
-                                placeholder="Pick an avatar"
-                                prepend-icon="mdi-camera"
-                                label="Avatar"
-                                @change="onFileChange"
-                            ></v-file-input>
-                        </v-col>
-                        <v-col
-                        cols="12"
-                        md="6"
-                        >
-                        <v-text-field
-                            label="First Name"
-                            class="purple-input"
-                            v-model="profile.first_name"
-                        />
-                        </v-col>
+                    >
+                        <v-file-input
+                            :rules="rules"
+                            type="file"
+                            accept="image/png, image/jpeg, image/bmp"
+                            placeholder="Pick an avatar"
+                            prepend-icon="mdi-camera"
+                            label="Avatar"
+                            @change="onFileChange"
+                        ></v-file-input>
+                    </v-col>
+                    <v-col
+                    cols="12"
+                    md="6"
+                    >
+                    <v-text-field
+                        label="First Name"
+                        class="purple-input"
+                        v-model="profile.first_name"
+                    />
+                    </v-col>
 
-                        <v-col
-                        cols="12"
-                        md="6"
-                        >
-                        <v-text-field
-                            label="Last Name"
-                            class="purple-input"
-                            v-model="profile.last_name"
-                        />
-                        </v-col>
+                    <v-col
+                    cols="12"
+                    md="6"
+                    >
+                    <v-text-field
+                        label="Last Name"
+                        class="purple-input"
+                        v-model="profile.last_name"
+                    />
+                    </v-col>
 
-                        <v-col cols="12">
-                        <v-textarea
-                            class="purple-input"
-                            label="About Me"
-                            v-model="profile.about_me"
-                        />
-                        </v-col>
+                    <v-col cols="12">
+                    <v-textarea
+                        class="purple-input"
+                        label="About Me"
+                        v-model="profile.about_me"
+                    />
+                    </v-col>
 
-                        <v-col
-                        cols="12"
-                        class="text-right"
-                        >
-                        <v-btn
-                            color="success"
-                            class="mr-0"
-                            @click.prevent="updateProfile"
-                        >
-                            Update Profile
-                        </v-btn>
-                        </v-col>
-                    </v-row>
-                    </v-container>
-                </v-form>
-                </base-material-card>
-            </v-col>
+                    <v-col
+                    cols="12"
+                    class="text-right"
+                    >
+                    <v-btn
+                        color="success"
+                        class="mr-0"
+                        @click.prevent="updateProfile"
+                    >
+                        Update Profile
+                    </v-btn>
+                    </v-col>
+                </v-row>
+                </v-container>
+            </v-form>
+            </base-material-card>
+        </v-col>
 
-            <v-col
-                cols="12"
-                md="4"
+        <v-col
+            cols="12"
+            md="4"
+        >
+            <base-material-card
+            class="v-card-profile"
+            v-bind:avatar= "profile.avatar"
             >
-                <base-material-card
-                class="v-card-profile"
-                v-bind:avatar= "profile.avatar"
-                >
-                <v-card-text class="text-center">
-                    <h6 class="display-1 mb-1 grey--text">
-                        {{ profile.role }}
-                    </h6>
+            <v-card-text class="text-center">
+                <h6 class="display-1 mb-1 grey--text">
+                    {{ profile.role }}
+                </h6>
 
-                    <h4 class="display-2 font-weight-light mb-3 black--text">
-                    {{ profile.first_name }} {{ profile.last_name }}
-                    </h4>
+                <h4 class="display-2 font-weight-light mb-3 black--text">
+                {{ profile.first_name }} {{ profile.last_name }}
+                </h4>
 
-                    <p class="font-weight-light grey--text">
-                        {{ profile.about_me }}
-                    </p>
-                </v-card-text>
-                </base-material-card>
-            </v-col>
-            </v-row>
-        </v-container>
-    </v-main>
+                <p class="font-weight-light grey--text">
+                    {{ profile.about_me }}
+                </p>
+            </v-card-text>
+            </base-material-card>
+        </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>

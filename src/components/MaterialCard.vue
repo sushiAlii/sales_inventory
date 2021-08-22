@@ -17,12 +17,12 @@
       <v-sheet
         v-else
         :class="{
-          'pa-7': !$slots.image
+          'pa-7': !$slots.image,
         }"
         :color="color"
         :max-height="icon ? 90 : undefined"
         :width="icon ? 'auto' : '100%'"
-        elevation="6"
+        elevation="10"
         class="text-start v-card--material__heading mb-n6"
         dark
       >

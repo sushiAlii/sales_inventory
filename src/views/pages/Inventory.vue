@@ -1,400 +1,404 @@
 <template>
-    <v-main>
-        <navbar />
-            <v-container>
-                    <v-row
-                        
-                        justify="end"
+    <v-container
+        fill-height
+        
+    >
+            <v-row
+                justify="end"
+            >
+                <v-col
+                    justify="end"
+                    align="end"
+                    cols="12"
+                    md="2"
+                    sm="3"
+                >
+                    <v-menu
+                        ref="menu2"
+                        v-model="menu2"
+                        :close-on-content-click="false"
+                        :return-value.sync="date2"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
                     >
-                        <v-col
-                            cols="12"
-                            md="2"
-                            sm="3"
+                        <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                            v-model="dateRangeText"
+                            label="Date Range"
+                            prepend-inner-icon="mdi-calendar"
+                            format="MM/DD/yyyy"
+                            outlined
+                            dense
+                            filled
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            @clear:clear="clear"
+                        ></v-text-field>
+                        </template>
+                        <v-date-picker
+                        v-model="dates"
+                        range
+                        width="300"
                         >
-                            <v-menu
-                                ref="menu2"
-                                v-model="menu2"
-                                :close-on-content-click="false"
-                                :return-value.sync="date2"
-                                transition="scale-transition"
-                                offset-y
-                                min-width="auto"
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            text
+                            color="primary"
+                            @click="menu2 = false"
+                        >
+                            Cancel
+                        </v-btn>
+                        <v-btn
+                            text
+                            color="primary"
+                            @click="getFilteredData"
+                        >
+                            OK
+                        </v-btn>
+                        </v-date-picker>
+                    </v-menu>
+                </v-col>
+                <v-col
+                    justify="end"
+                    align="end"
+                    cols="12"
+                    md="1"
+                >
+                    <v-dialog
+                        v-model="dialog"
+                        persistent
+                        max-width="700px"
+                    >
+                <template v-slot:activator="{ on, attrs }">    
+                        <v-btn
+                        color="white"
+                        fab
+                        small
+                        light
+                        v-bind="attrs"
+                        v-on="on"
+                    >
+                        <v-icon>mdi-plus-circle-outline</v-icon> 
+                    </v-btn> 
+                    
+                </template>
+                <v-card>
+                    <v-card-title>
+                        <span class="text-h5">Add Stock</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-form
+                                ref="form"
                             >
-                                <template v-slot:activator="{ on, attrs }">
+                            <v-row>
+                                <v-col
+                                    cols="12"
+                                    md="2"
+                                    sm="2"
+                                >
                                 <v-text-field
-                                    v-model="dateRangeText"
-                                    label="Date Range"
-                                    prepend-inner-icon="mdi-calendar"
-                                    format="MM/DD/yyyy"
+                                    label="Batch"
+                                    v-model="batch"
                                     outlined
-                                    dense
-                                    filled
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    @clear:clear="clear"
-                                ></v-text-field>
-                                </template>
-                                <v-date-picker
-                                v-model="dates"
-                                range
-                                width="300"
+                                    disabled
                                 >
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="menu2 = false"
-                                >
-                                    Cancel
-                                </v-btn>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="getFilteredData"
-                                >
-                                    OK
-                                </v-btn>
-                                </v-date-picker>
-                            </v-menu>
-                        </v-col>
-                        <v-col
-                            cols="12"
-                            md="1"
-                        >
-                            <v-dialog
-                                v-model="dialog"
-                                persistent
-                                max-width="700px"
+                                </v-text-field>
+                                    </v-col>
+            
+                                        <v-btn
+                                            color="secondary"
+                                            fab
+                                            x-small
+                                            
+                                            :disabled="disable"
+                                            @click="incrementBatch"
+                                        >
+                                            <v-icon>mdi-plus</v-icon>
+                                        </v-btn>
+                                </v-row>
+                                <v-row>
+                                    <v-col 
+                                        cols="12"
+                                        md="6"
+                                        sm="6"
+                                    >
+                                        <v-select
+                                            label="Item"
+                                            :items="item_list"
+                                            v-model="item"
+                                            required
+                                        >
+                                        </v-select>
+                                    </v-col>
+                                    <v-col 
+                                        cols="12"
+                                        md="4"
+                                        sm="4"
+                                    >
+                                        <v-text-field
+                                            label="Quantity"
+                                            v-model="quantity"
+                                            required
+                                        >
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col
+                                        cols="12"
+                                        md="4"
+                                        sm="4"
+                                    >
+                                        <v-menu
+                                            ref="menu"
+                                            v-model="menu"
+                                            :close-on-content-click="false"
+                                            transition="scale-transition"
+                                            offset-y
+                                            min-width="auto"
+                                        >
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-text-field
+                                                    label="Expiration Date"
+                                                    v-model="date"
+                                                    prepend-icon="mdi-calendar"
+                                                    readonly
+                                                    v-bind="attrs"
+                                                    v-on="on"
+                                                >
+                                                </v-text-field>
+                                            </template>
+                                            <v-date-picker
+                                                v-model="date"
+                                                :active-picker.sync="activePicker"
+                                                :min="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                                                max="2050-01-01"
+                                                @change="save"
+                                            >
+                                            </v-date-picker>   
+                                        </v-menu> 
+                                    </v-col>
+                                </v-row>
+                            </v-form>
+                            </v-container>
+                        <small>*indicates required field</small>
+                        </v-card-text>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                            <v-btn
+                                color="black"
+                                text
+                                @click="resetForm"
                             >
-                        <template v-slot:activator="{ on, attrs }">    
-                                <v-btn
-                                color="white"
-                                fab
-                                small
-                                light
+                                Close
+                            </v-btn>
+                            <v-btn
+                                color="black"
+                                text
+                                @click.prevent="addInventory"
+                            >
+                                Add
+                            </v-btn>
+                        </v-card-actions>
+                        
+                    </v-card>
+                </v-dialog>
+                </v-col>
+            </v-row>
+        
+        <v-card>
+            <v-card-title>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                ></v-text-field>
+            </v-card-title>
+            <v-data-table
+                :headers="headers"
+                :items="stocks"
+                :search="search"
+            >
+                <template v-if="filtered==false" v-slot:[`item.action`]="{ item }">
+                    <v-dialog
+                        v-model="dialog_2"
+                        max-width="600px"
+                        :retain-focus="false"
+                        persistent
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn 
+                                x-small
+                                @click.prevent="onButtonClick(item)"
+                                color="green lighten-2"
                                 v-bind="attrs"
                                 v-on="on"
                             >
-                                <v-icon>mdi-plus-circle-outline</v-icon> 
-                            </v-btn> 
-                            
+                                Transfer
+                            </v-btn>
                         </template>
                         <v-card>
                             <v-card-title>
-                                <span class="text-h5">Add Stock</span>
+                                <span class="text-h5">Transfer to Operation</span>
                             </v-card-title>
                             <v-card-text>
                                 <v-container>
-                                    <v-form
-                                        ref="form"
-                                    >
                                     <v-row>
                                         <v-col
                                             cols="12"
                                             md="2"
                                             sm="2"
                                         >
-                                        <v-text-field
-                                            label="Batch"
-                                            v-model="batch"
-                                            outlined
-                                            disabled
+                                            <v-text-field
+                                                label="Batch"
+                                                v-model="row_data.batch_id"
+                                                disabled
+                                            >
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col 
+                                            cols="12"
+                                            md="4"
+                                            sm="4"
                                         >
-                                        </v-text-field>
-                                            </v-col>
-                    
-                                                <v-btn
-                                                    color="secondary"
-                                                    fab
-                                                    x-small
-                                                    
-                                                    :disabled="disable"
-                                                    @click="incrementBatch"
-                                                >
-                                                    <v-icon>mdi-plus</v-icon>
-                                                </v-btn>
-                                        </v-row>
-                                        <v-row>
-                                            <v-col 
-                                                cols="12"
-                                                md="6"
-                                                sm="6"
+                                            <v-text-field
+                                                label="Item"
+                                                v-model="row_data.item_name"
+                                                disabled
                                             >
-                                                <v-select
-                                                    label="Item"
-                                                    :items="item_list"
-                                                    v-model="item"
-                                                    required
-                                                >
-                                                </v-select>
-                                            </v-col>
-                                            <v-col 
-                                                cols="12"
-                                                md="4"
-                                                sm="4"
+                                            </v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col 
+                                            cols="12"
+                                            md="3"
+                                            sm="3"
+                                        >
+                                            <v-text-field
+                                                label="Size"
+                                                v-model="row_data.size"
+                                                disabled
                                             >
-                                                <v-text-field
-                                                    label="Quantity"
-                                                    v-model="quantity"
-                                                    required
-                                                >
-                                                </v-text-field>
-                                            </v-col>
-                                            <v-col
-                                                cols="12"
-                                                md="4"
-                                                sm="4"
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col
+                                            cols="12"
+                                            md="2"
+                                            sm="2"
+                                        >
+                                            <v-text-field
+                                                label="Unit"
+                                                v-model="row_data.unit_name"
+                                                disabled
                                             >
-                                                <v-menu
-                                                    ref="menu"
-                                                    v-model="menu"
-                                                    :close-on-content-click="false"
-                                                    transition="scale-transition"
-                                                    offset-y
-                                                    min-width="auto"
-                                                >
-                                                    <template v-slot:activator="{ on, attrs }">
-                                                        <v-text-field
-                                                            label="Expiration Date"
-                                                            v-model="date"
-                                                            prepend-icon="mdi-calendar"
-                                                            readonly
-                                                            v-bind="attrs"
-                                                            v-on="on"
-                                                        >
-                                                        </v-text-field>
-                                                    </template>
-                                                    <v-date-picker
-                                                        v-model="date"
-                                                        :active-picker.sync="activePicker"
-                                                        :min="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
-                                                        max="2050-01-01"
-                                                        @change="save"
-                                                    >
-                                                    </v-date-picker>   
-                                                </v-menu> 
-                                            </v-col>
-                                        </v-row>
-                                    </v-form>
-                                    </v-container>
-                                <small>*indicates required field</small>
-                                </v-card-text>
-                                <v-card-actions>
-                                <v-spacer></v-spacer>
-                                    <v-btn
-                                        color="black"
-                                        text
-                                        @click="resetForm"
-                                    >
-                                        Close
-                                    </v-btn>
-                                    <v-btn
-                                        color="black"
-                                        text
-                                        @click.prevent="addInventory"
-                                    >
-                                        Add
-                                    </v-btn>
-                                </v-card-actions>
-                                
-                            </v-card>
-                        </v-dialog>
-                        </v-col>
-                    </v-row>
-                
-                <v-card>
-                    <v-card-title>
-                        <v-text-field
-                            v-model="search"
-                            append-icon="mdi-magnify"
-                            label="Search"
-                            single-line
-                            hide-details
-                        ></v-text-field>
-                    </v-card-title>
-                    <v-data-table
-                        :headers="headers"
-                        :items="stocks"
-                        :search="search"
-                    >
-                        <template v-if="filtered==false" v-slot:[`item.action`]="{ item }">
-                            <v-dialog
-                                v-model="dialog_2"
-                                max-width="600px"
-                                :retain-focus="false"
-                                persistent
-                            >
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn 
-                                        x-small
-                                        @click.prevent="onButtonClick(item)"
-                                        color="green lighten-2"
-                                        v-bind="attrs"
-                                        v-on="on"
-                                    >
-                                        Transfer
-                                    </v-btn>
-                                </template>
-                                <v-card>
-                                    <v-card-title>
-                                        <span class="text-h5">Transfer to Operation</span>
-                                    </v-card-title>
-                                    <v-card-text>
-                                        <v-container>
-                                            <v-row>
-                                                <v-col
-                                                    cols="12"
-                                                    md="2"
-                                                    sm="2"
-                                                >
-                                                    <v-text-field
-                                                        label="Batch"
-                                                        v-model="row_data.batch_id"
-                                                        disabled
-                                                    >
-                                                    </v-text-field>
-                                                </v-col>
-                                                <v-col 
-                                                    cols="12"
-                                                    md="4"
-                                                    sm="4"
-                                                >
-                                                    <v-text-field
-                                                        label="Item"
-                                                        v-model="row_data.item_name"
-                                                        disabled
-                                                    >
-                                                    </v-text-field>
-                                                </v-col>
-                                            </v-row>
-                                            <v-row>
-                                                <v-col 
-                                                    cols="12"
-                                                    md="3"
-                                                    sm="3"
-                                                >
-                                                    <v-text-field
-                                                        label="Size"
-                                                        v-model="row_data.size"
-                                                        disabled
-                                                    >
-                                                    </v-text-field>
-                                                </v-col>
-                                                <v-col
-                                                    cols="12"
-                                                    md="2"
-                                                    sm="2"
-                                                >
-                                                    <v-text-field
-                                                        label="Unit"
-                                                        v-model="row_data.unit_name"
-                                                        disabled
-                                                    >
-                                                    </v-text-field>
-                                                </v-col>
-                                                <v-col
-                                                    cols="12"
-                                                    md="3"
-                                                    sm="3"
-                                                >
-                                                    <v-text-field
-                                                        label="Cost"
-                                                        v-model="row_data.unit_cost"
-                                                        disabled
-                                                    >
-                                                    </v-text-field>
-                                                </v-col>
-                                            </v-row>
-                                            <v-row>
-                                                <v-col
-                                                    cols="12"
-                                                    md="6"
-                                                    sm="6"
-                                                >
-                                                    <v-text-field
-                                                        label="Date Received"
-                                                        v-model="row_data.date_received"
-                                                        disabled
-                                                    >
-                                                    </v-text-field>
-                                                </v-col>
-                                                <v-col
-                                                    cols="12"
-                                                    md="6"
-                                                    sm="6"
-                                                >
-                                                    <v-text-field
-                                                        label="Expiration Date"
-                                                        v-model="row_data.expiration_date"
-                                                        disabled
-                                                    >
-                                                    </v-text-field>
-                                                </v-col>
-                                                <v-col
-                                                    cols="12"
-                                                    md="12"
-                                                    sm="12"
-                                                >
-                                                    <v-card
-                                                        flat
-                                                        color="transparent"
-                                                    >
-                                                        <v-subheader>Transfer Amount ({{row_data.quantity}} Remaining)</v-subheader>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col
+                                            cols="12"
+                                            md="3"
+                                            sm="3"
+                                        >
+                                            <v-text-field
+                                                label="Cost"
+                                                v-model="row_data.unit_cost"
+                                                disabled
+                                            >
+                                            </v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col
+                                            cols="12"
+                                            md="6"
+                                            sm="6"
+                                        >
+                                            <v-text-field
+                                                label="Date Received"
+                                                v-model="row_data.date_received"
+                                                disabled
+                                            >
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col
+                                            cols="12"
+                                            md="6"
+                                            sm="6"
+                                        >
+                                            <v-text-field
+                                                label="Expiration Date"
+                                                v-model="row_data.expiration_date"
+                                                disabled
+                                            >
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col
+                                            cols="12"
+                                            md="12"
+                                            sm="12"
+                                        >
+                                            <v-card
+                                                flat
+                                                color="transparent"
+                                            >
+                                                <v-subheader>Transfer Amount ({{row_data.quantity}} Remaining)</v-subheader>
 
-                                                        <v-card-text>
-                                                        <v-row>
-                                                            <v-col class="pr-4">
-                                                            <v-slider
-                                                                v-model="transfer_quantity"
-                                                                class="align-center"
-                                                                :max="row_data.quantity"
-                                                                :min="1"
-                                                                hide-details
-                                                            >
-                                                                <template v-slot:append>
-                                                                <v-text-field
-                                                                    v-model="transfer_quantity"
-                                                                    class="mt-0 pt-0"
-                                                                    hide-details
-                                                                    single-line
-                                                                    type="number"
-                                                                    style="width: 60px"
-                                                                ></v-text-field>
-                                                                </template>
-                                                            </v-slider>
-                                                            </v-col>
-                                                        </v-row>
-                                                        </v-card-text>
-                                                    </v-card>
-                                                </v-col>
-                                            </v-row>
-                                        </v-container>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                        <v-btn
-                                            color="black"
-                                            text
-                                            @click="resetForm_2"
-                                        >
-                                            Close
-                                        </v-btn>
-                                        <v-btn
-                                            color="black"
-                                            text
-                                            @click.prevent="transferInventory"
-                                        >
-                                            Transfer
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                        </template>           
-                    </v-data-table>
-                </v-card>
-            </v-container>
-    </v-main>
+                                                <v-card-text>
+                                                <v-row>
+                                                    <v-col class="pr-4">
+                                                    <v-slider
+                                                        v-model="transfer_quantity"
+                                                        class="align-center"
+                                                        :max="row_data.quantity"
+                                                        :min="1"
+                                                        hide-details
+                                                    >
+                                                        <template v-slot:append>
+                                                        <v-text-field
+                                                            v-model="transfer_quantity"
+                                                            class="mt-0 pt-0"
+                                                            hide-details
+                                                            single-line
+                                                            type="number"
+                                                            style="width: 60px"
+                                                        ></v-text-field>
+                                                        </template>
+                                                    </v-slider>
+                                                    </v-col>
+                                                </v-row>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
+                            <v-card-actions>
+                            <v-spacer></v-spacer>
+                                <v-btn
+                                    color="black"
+                                    text
+                                    @click="resetForm_2"
+                                >
+                                    Close
+                                </v-btn>
+                                <v-btn
+                                    color="black"
+                                    text
+                                    @click.prevent="transferInventory"
+                                >
+                                    Transfer
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </template>           
+            </v-data-table>
+        </v-card>
+    </v-container>
+    
 </template>
 
 <script>

@@ -1,177 +1,178 @@
 <template>
-    <v-main>
-        <navbar />
-        <v-container
-            tag="section"
-        >
-            <v-row class="my-15">
-                <v-col
-                    cols="12"
-                    md="9"
-                >
-                    <base-material-chart-card
-                        :data="inventoryChart.data"
-                        :options="inventoryChart.options"
-                        :responsive-options="inventoryChart.responsiveOptions"
-                        color="info"
-                        hover-reveal
-                        type="Bar"
-                    >
-                        <template v-slot:reveal-actions>
-                            <v-tooltip bottom>
-                            <template v-slot:activator="{ attrs, on }">
-                                <v-btn
-                                v-bind="attrs"
-                                color="info"
-                                icon
-                                v-on="on"
-                                >
-                                <v-icon
-                                    color="info"
-                                >
-                                    mdi-refresh
-                                </v-icon>
-                                </v-btn>
-                            </template>
 
-                            <span>Refresh</span>
-                            </v-tooltip>
-
-                            <v-tooltip bottom>
-                            <template v-slot:activator="{ attrs, on }">
-                                <v-btn
-                                v-bind="attrs"
-                                light
-                                icon
-                                v-on="on"
-                                >
-                                <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
-                            </template>
-
-                            <span>Change Date</span>
-                            </v-tooltip>
-                        </template>
-
-                        <h4 class="card-title font-weight-light mt-2 ml-2">
-                            Inventory Overview
-                        </h4>
-
-                        <p class="d-inline-flex font-weight-light ml-2 mt-1">
-                            Quantity per Item
-                        </p>
-
-                        <template v-slot:actions>
-                            <v-icon
-                            class="mr-1"
-                            small
-                            >
-                            mdi-clock-outline
-                            </v-icon>
-                            <span class="caption grey--text font-weight-light">updating every transaction</span>
-                        </template>
-                        </base-material-chart-card>
-                </v-col>
-                <v-col
+    <v-container
+        id="dashboard"
+        tag="section"
+        fill-height
+        fluid
+    >
+        <v-row class="my-10">
+            <v-col
                 cols="12"
-                md="3"
+                md="9"
+            >
+                <base-material-chart-card
+                    :data="inventoryChart.data"
+                    :options="inventoryChart.options"
+                    :responsive-options="inventoryChart.responsiveOptions"
+                    color="info"
+                    hover-reveal
+                    type="Bar"
                 >
-                    <base-material-stats-card
-                        color="warning"
-                        icon="mdi-battery-low"
-                        v-bind:title="lowest_stock.item_name"
-                        v-bind:value="lowest_stock.quantity"
-                        sub-icon="mdi-alert"
-                        sub-icon-color="red"
-                        sub-text="Lowest Item Stock..."
-                    />
-                </v-col>
-            </v-row>
-            <v-row class="mb-5">
-                <v-col
-                cols="12"
-                md="3"
-                >
-                    <base-material-stats-card
-                        color="success"
-                        icon="mdi-poll"
-                        v-bind:title="highest_util.item_name"
-                        v-bind:value="highest_util.item_util + '%'"
-                        sub-icon="mdi-tag"
-                        sub-text="Highest Item Utilization"
-                    />
-                </v-col>
-                <v-col
-                    
-                    cols="12"
-                    md="9"
-                >
-                    <base-material-chart-card
-                        :data="operationChart.data"
-                        :options="operationChart.options"
-                        :responsive-options="operationChart.responsiveOptions"
-                        color="#E91E63"
-                        hover-reveal
-                        type="Bar"
-                    >
-                        <template v-slot:reveal-actions>
-                            <v-tooltip bottom>
-                            <template v-slot:activator="{ attrs, on }">
-                                <v-btn
-                                v-bind="attrs"
-                                color="info"
-                                icon
-                                v-on="on"
-                                >
-                                <v-icon
-                                    color="info"
-                                >
-                                    mdi-refresh
-                                </v-icon>
-                                </v-btn>
-                            </template>
-
-                            <span>Refresh</span>
-                            </v-tooltip>
-
-                            <v-tooltip bottom>
-                            <template v-slot:activator="{ attrs, on }">
-                                <v-btn
-                                v-bind="attrs"
-                                light
-                                icon
-                                v-on="on"
-                                >
-                                <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
-                            </template>
-
-                            <span>Change Date</span>
-                            </v-tooltip>
-                        </template>
-
-                        <h4 class="card-title font-weight-light mt-2 ml-2">
-                            Operation Overview
-                        </h4>
-
-                        <p class="d-inline-flex font-weight-light ml-2 mt-1">
-                            Quantity(Used)  per Item
-                        </p>
-
-                        <template v-slot:actions>
-                            <v-icon
-                            class="mr-1"
-                            small
+                    <template v-slot:reveal-actions>
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ attrs, on }">
+                            <v-btn
+                            v-bind="attrs"
+                            color="info"
+                            icon
+                            v-on="on"
                             >
-                            mdi-clock-outline
+                            <v-icon
+                                color="info"
+                            >
+                                mdi-refresh
                             </v-icon>
-                            <span class="caption grey--text font-weight-light">updating every transaction</span>
+                            </v-btn>
                         </template>
-                        </base-material-chart-card>
-                </v-col>
-            </v-row>
-        </v-container>
-    </v-main>
+
+                        <span>Refresh</span>
+                        </v-tooltip>
+
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ attrs, on }">
+                            <v-btn
+                            v-bind="attrs"
+                            light
+                            icon
+                            v-on="on"
+                            >
+                            <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                        </template>
+
+                        <span>Change Date</span>
+                        </v-tooltip>
+                    </template>
+
+                    <h4 class="card-title font-weight-light mt-2 ml-2">
+                        Inventory Overview
+                    </h4>
+
+                    <p class="d-inline-flex font-weight-light ml-2 mt-1">
+                        Quantity per Item
+                    </p>
+
+                    <template v-slot:actions>
+                        <v-icon
+                        class="mr-1"
+                        small
+                        >
+                        mdi-clock-outline
+                        </v-icon>
+                        <span class="caption grey--text font-weight-light">updating every transaction</span>
+                    </template>
+                    </base-material-chart-card>
+            </v-col>
+            <v-col
+            cols="12"
+            md="3"
+            >
+                <base-material-stats-card
+                    color="warning"
+                    icon="mdi-battery-low"
+                    v-bind:title="lowest_stock.item_name"
+                    v-bind:value="lowest_stock.quantity"
+                    sub-icon="mdi-alert"
+                    sub-icon-color="red"
+                    sub-text="Lowest Item Stock..."
+                />
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col
+            cols="12"
+            md="3"
+            >
+                <base-material-stats-card
+                    color="success"
+                    icon="mdi-poll"
+                    v-bind:title="highest_util.item_name"
+                    v-bind:value="highest_util.item_util + '%'"
+                    sub-icon="mdi-tag"
+                    sub-text="Highest Item Utilization"
+                />
+            </v-col>
+            <v-col
+                
+                cols="12"
+                md="9"
+            >
+                <base-material-chart-card
+                    :data="operationChart.data"
+                    :options="operationChart.options"
+                    :responsive-options="operationChart.responsiveOptions"
+                    color="#E91E63"
+                    hover-reveal
+                    type="Bar"
+                >
+                    <template v-slot:reveal-actions>
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ attrs, on }">
+                            <v-btn
+                            v-bind="attrs"
+                            color="info"
+                            icon
+                            v-on="on"
+                            >
+                            <v-icon
+                                color="info"
+                            >
+                                mdi-refresh
+                            </v-icon>
+                            </v-btn>
+                        </template>
+
+                        <span>Refresh</span>
+                        </v-tooltip>
+
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ attrs, on }">
+                            <v-btn
+                            v-bind="attrs"
+                            light
+                            icon
+                            v-on="on"
+                            >
+                            <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                        </template>
+
+                        <span>Change Date</span>
+                        </v-tooltip>
+                    </template>
+
+                    <h4 class="card-title font-weight-light mt-2 ml-2">
+                        Operation Overview
+                    </h4>
+
+                    <p class="d-inline-flex font-weight-light ml-2 mt-1">
+                        Quantity(Used)  per Item
+                    </p>
+
+                    <template v-slot:actions>
+                        <v-icon
+                        class="mr-1"
+                        small
+                        >
+                        mdi-clock-outline
+                        </v-icon>
+                        <span class="caption grey--text font-weight-light">updating every transaction</span>
+                    </template>
+                    </base-material-chart-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>

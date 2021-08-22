@@ -2,8 +2,9 @@
     <nav>
         <v-app-bar
         id="app-bar"
+        absolute 
         app
-        color="transparent"
+        color="grey lighten-3"
         flat
         height="75"
         >

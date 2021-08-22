@@ -10,58 +10,74 @@ import Accounts from '../views/pages/Accounts.vue'
 import ManageAccounts from '../views/pages/Manage_Accounts.vue'
 import Miscellaneous from '../views/pages/Miscellaneous.vue'
 import Login from '../views/auth/Login.vue'
+import Test from '../views/pages/Test.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Dashboard',
-    meta: { requiresAuth: true },
-    component: Dashboard
+    component: () => import('@/views/Index.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Dashboard',
+        meta: { requiresAuth: true },
+        component: Dashboard
+      },
+      {
+        path: '/items',
+        name: 'Items',
+        meta: { requiresAuth: true },
+        component: Items
+      },
+      {
+        path: '/inventory',
+        name: 'Inventory',
+        meta: { requiresAuth: true },
+        component: Inventory
+      },
+      {
+        path: '/operations',
+        name: 'Operations',
+        meta: { requiresAuth: true },
+        component: Operations
+      },
+      {
+        path: '/login',
+        name: 'Login',
+        meta: { guest: true },
+        component: Login,
+      },
+      {
+        path: '/settings/accounts',
+        name: 'Account',
+        meta: { requiresAuth: true },
+        component: Accounts
+      },
+      {
+        path: '/settings/manage_accounts',
+        name: 'Manage Accounts',
+        meta: { requiresAuth: true },
+        component: ManageAccounts
+      },
+      {
+        path: '/settings/miscellaneous',
+        name: 'Miscellaneous',
+        meta: { requiresAuth: true },
+        component: Miscellaneous
+      },
+      {
+        path: '/test',
+        name: 'Test',
+        meta: { requiresAuth: true },
+        component: Test
+      }
+    ]
   },
-  {
-    path: '/items',
-    name: 'Items',
-    meta: { requiresAuth: true },
-    component: Items
-  },
-  {
-    path: '/inventory',
-    name: 'Inventory',
-    meta: { requiresAuth: true },
-    component: Inventory
-  },
-  {
-    path: '/operations',
-    name: 'Operations',
-    meta: { requiresAuth: true },
-    component: Operations
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    meta: { guest: true },
-    component: Login,
-  },
-  {
-    path: '/settings/accounts',
-    name: 'Account',
-    meta: { requiresAuth: true },
-    component: Accounts
-  },
-  {
-    path: '/settings/manage_accounts',
-    name: 'Manage Accounts',
-    meta: { requiresAuth: true },
-    component: ManageAccounts
-  },
-  {
-    path: '/settings/miscellaneous',
-    name: 'Miscellaneous',
-    meta: { requiresAuth: true },
-    component: Miscellaneous
-  }
+
+  
+  
 ]
 
 const router = new VueRouter({

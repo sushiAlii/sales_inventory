@@ -82,7 +82,7 @@
       .ct-label
         color: inherit
         opacity: .7
-        font-size: 0.975rem
+        font-size: 0.655rem
         font-weight: 100
 
       .ct-grid

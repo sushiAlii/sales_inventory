@@ -1,84 +1,80 @@
 <template>
-    <v-main>
-        <navbar />
-            <v-container>
+    <v-container>
+        <v-row>
+            <v-col></v-col>
+            <v-col
+                cols="12"
+                md="2"
+            >
+            <v-menu
+                v-model="menu"
+                ref="menu"
+                :close-on-content-click="false"
+                :return-value.sync="date"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="dateRangeText"
+                    label="Date Range"
+                    prepend-inner-icon="mdi-calendar"
+                    format="MM/DD/yyyy"
+                    readonly 
+                    filled
+                    outlined
+                    dense
+                    v-bind="attrs"
+                    v-on="on"
+                    @clear:clear="clear"
+                ></v-text-field>
+                </template>
+                <v-date-picker
+                    v-model="dates"
+                    range
+                    width="300"
+                    
+                >
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        text
+                        color="primary"
+                        @click="menu = false"
+                    >
+                        Cancel
+                    </v-btn>
+                    <v-btn
+                        text
+                        color="primary"
+                        @click="loadNewOperations"
+                    >
+                        OK
+                    </v-btn>
+                </v-date-picker>
+            </v-menu>
+            </v-col>
+        </v-row>
+                    
                 
-                <v-row>
-                    <v-col></v-col>
-                    <v-col
-                        cols="12"
-                        md="2"
-                    >
-                    <v-menu
-                        v-model="menu"
-                        ref="menu"
-                        :close-on-content-click="false"
-                        :return-value.sync="date"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                            v-model="dateRangeText"
-                            label="Date Range"
-                            prepend-inner-icon="mdi-calendar"
-                            format="MM/DD/yyyy"
-                            readonly 
-                            filled
-                            outlined
-                            dense
-                            v-bind="attrs"
-                            v-on="on"
-                            @clear:clear="clear"
-                        ></v-text-field>
-                        </template>
-                        <v-date-picker
-                            v-model="dates"
-                            range
-                            width="300"
-                            
-                        >
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                text
-                                color="primary"
-                                @click="menu = false"
-                            >
-                                Cancel
-                            </v-btn>
-                            <v-btn
-                                text
-                                color="primary"
-                                @click="loadNewOperations"
-                            >
-                                OK
-                            </v-btn>
-                        </v-date-picker>
-                    </v-menu>
-                    </v-col>
-                </v-row>
-                            
-                        
-                <v-card>
-                    <v-card-title>
-                        <v-text-field
-                            v-model="search"
-                            append-icon="mdi-magnify"
-                            label="Search"
-                            single-line
-                            hide-details
-                        ></v-text-field>
-                    </v-card-title>
-                    <v-data-table
-                        :headers="headers"
-                        :items="operations"
-                        :search="search"
-                    >
-                    </v-data-table>
-                </v-card>
-            </v-container>
-    </v-main>
+        <v-card>
+            <v-card-title>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                ></v-text-field>
+            </v-card-title>
+            <v-data-table
+                :headers="headers"
+                :items="operations"
+                :search="search"
+            >
+            </v-data-table>
+        </v-card>
+    </v-container>
 </template>
 
 <script>
