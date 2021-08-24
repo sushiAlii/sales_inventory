@@ -16,61 +16,61 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/auth',
+    name: 'Auth',
+    component: () => import('@/views/Auth.vue'),
+    meta: { guest: true },
+    children: [
+      {
+        path: '/login',
+        name: 'Login',
+        component: Login
+      }
+    ]
+  },
+  {
     path: '/',
     component: () => import('@/views/Index.vue'),
+    meta: { requiresAuth: true },
     children: [
       {
         path: '',
         name: 'Dashboard',
-        meta: { requiresAuth: true },
         component: Dashboard
       },
       {
         path: '/items',
         name: 'Items',
-        meta: { requiresAuth: true },
         component: Items
       },
       {
         path: '/inventory',
         name: 'Inventory',
-        meta: { requiresAuth: true },
         component: Inventory
       },
       {
         path: '/operations',
         name: 'Operations',
-        meta: { requiresAuth: true },
         component: Operations
-      },
-      {
-        path: '/login',
-        name: 'Login',
-        meta: { guest: true },
-        component: Login,
       },
       {
         path: '/settings/accounts',
         name: 'Account',
-        meta: { requiresAuth: true },
         component: Accounts
       },
       {
         path: '/settings/manage_accounts',
         name: 'Manage Accounts',
-        meta: { requiresAuth: true },
         component: ManageAccounts
       },
       {
         path: '/settings/miscellaneous',
         name: 'Miscellaneous',
-        meta: { requiresAuth: true },
         component: Miscellaneous
       },
       {
         path: '/test',
         name: 'Test',
-        meta: { requiresAuth: true },
         component: Test
       }
     ]

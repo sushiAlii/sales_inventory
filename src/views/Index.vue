@@ -2,8 +2,7 @@
     <v-app>
         <nav-bar></nav-bar>
 
-        <home-view></home-view>
-
+        <home-view ></home-view>
     </v-app>
 </template>
 
@@ -11,12 +10,12 @@
 import Navbar from '@/components/Navbar'
 import HomeView from './pages/HomeView'
 
+
 export default {
     name: 'Index',
     components: {
         'nav-bar': Navbar,
-        'home-view': HomeView
-    }
-
+        'home-view': HomeView,
+    },
 }
 </script>

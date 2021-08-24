@@ -102,14 +102,6 @@
         },
         methods: {
             async handleLogin () {
-                // console.log("hi");
-                // const { user, error } = await supabase.auth.signIn({
-                //     email: this.formData.email,
-                //     password: this.formData.password
-                // }).then(response => {
-                //     console.log(response);
-                //     this.$router.push('/')
-                // })
                 this.$store.dispatch("signInAction", this.formData)
 
             },
