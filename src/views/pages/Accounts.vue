@@ -118,11 +118,11 @@
             v-bind:avatar= "profile.avatar"
             >
             <v-card-text class="text-center">
-                <h6 class="display-1 mb-1 grey--text">
+                <h6 class="headline mb-1 grey--text">
                     {{ profile.role }}
                 </h6>
 
-                <h4 class="display-2 font-weight-light mb-3 black--text">
+                <h4 class="headline font-weight-light mb-3 black--text">
                 {{ profile.first_name }} {{ profile.last_name }}
                 </h4>
 
