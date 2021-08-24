@@ -1,6 +1,5 @@
 <template>
     <v-container
-        fill-height
         
     >
             <v-row
@@ -217,184 +216,182 @@
                     hide-details
                 ></v-text-field>
             </v-card-title>
+            <v-dialog
+                v-model="dialog_2"
+                max-width="600px"
+                :retain-focus="false"
+                persistent
+            >
+                <v-card>
+                    <v-card-title>
+                        <span class="text-h5">Transfer to Operation</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col
+                                    cols="12"
+                                    md="2"
+                                    sm="2"
+                                >
+                                    <v-text-field
+                                        label="Batch"
+                                        v-model="row_data.batch_id"
+                                        disabled
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                                <v-col 
+                                    cols="12"
+                                    md="4"
+                                    sm="4"
+                                >
+                                    <v-text-field
+                                        label="Item"
+                                        v-model="row_data.item_name"
+                                        disabled
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col 
+                                    cols="12"
+                                    md="3"
+                                    sm="3"
+                                >
+                                    <v-text-field
+                                        label="Size"
+                                        v-model="row_data.size"
+                                        disabled
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                                <v-col
+                                    cols="12"
+                                    md="2"
+                                    sm="2"
+                                >
+                                    <v-text-field
+                                        label="Unit"
+                                        v-model="row_data.unit_name"
+                                        disabled
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                                <v-col
+                                    cols="12"
+                                    md="3"
+                                    sm="3"
+                                >
+                                    <v-text-field
+                                        label="Cost"
+                                        v-model="row_data.unit_cost"
+                                        disabled
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col
+                                    cols="12"
+                                    md="6"
+                                    sm="6"
+                                >
+                                    <v-text-field
+                                        label="Date Received"
+                                        v-model="row_data.date_received"
+                                        disabled
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                                <v-col
+                                    cols="12"
+                                    md="6"
+                                    sm="6"
+                                >
+                                    <v-text-field
+                                        label="Expiration Date"
+                                        v-model="row_data.expiration_date"
+                                        disabled
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                                <v-col
+                                    cols="12"
+                                    md="12"
+                                    sm="12"
+                                >
+                                    <v-card
+                                        flat
+                                        color="transparent"
+                                    >
+                                        <v-subheader>Transfer Amount ({{row_data.quantity}} Remaining)</v-subheader>
+
+                                        <v-card-text>
+                                        <v-row>
+                                            <v-col class="pr-4">
+                                            <v-slider
+                                                v-model="transfer_quantity"
+                                                class="align-center"
+                                                :max="row_data.quantity"
+                                                :min="1"
+                                                hide-details
+                                            >
+                                                <template v-slot:append>
+                                                <v-text-field
+                                                    v-model="transfer_quantity"
+                                                    class="mt-0 pt-0"
+                                                    hide-details
+                                                    single-line
+                                                    type="number"
+                                                    style="width: 60px"
+                                                ></v-text-field>
+                                                </template>
+                                            </v-slider>
+                                            </v-col>
+                                        </v-row>
+                                        </v-card-text>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+                        <v-btn
+                            color="black"
+                            text
+                            @click="resetForm_2"
+                        >
+                            Close
+                        </v-btn>
+                        <v-btn
+                            color="black"
+                            text
+                            @click.prevent="transferInventory"
+                        >
+                            Transfer
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>  
+            </v-dialog>
             <v-data-table
                 :headers="headers"
                 :items="stocks"
                 :search="search"
             >
                 <template v-if="filtered==false" v-slot:[`item.action`]="{ item }">
-                    <v-dialog
-                        v-model="dialog_2"
-                        max-width="600px"
-                        :retain-focus="false"
-                        persistent
+                    <v-btn 
+                        x-small
+                        @click.prevent="onButtonClick(item)"
+                        color="green lighten-2"
+                        v-bind="attrs"
+                        v-on="on"
                     >
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn 
-                                x-small
-                                @click.prevent="onButtonClick(item)"
-                                color="green lighten-2"
-                                v-bind="attrs"
-                                v-on="on"
-                            >
-                                Transfer
-                            </v-btn>
-                        </template>
-                        <v-card>
-                            <v-card-title>
-                                <span class="text-h5">Transfer to Operation</span>
-                            </v-card-title>
-                            <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col
-                                            cols="12"
-                                            md="2"
-                                            sm="2"
-                                        >
-                                            <v-text-field
-                                                label="Batch"
-                                                v-model="row_data.batch_id"
-                                                disabled
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                        <v-col 
-                                            cols="12"
-                                            md="4"
-                                            sm="4"
-                                        >
-                                            <v-text-field
-                                                label="Item"
-                                                v-model="row_data.item_name"
-                                                disabled
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col 
-                                            cols="12"
-                                            md="3"
-                                            sm="3"
-                                        >
-                                            <v-text-field
-                                                label="Size"
-                                                v-model="row_data.size"
-                                                disabled
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                        <v-col
-                                            cols="12"
-                                            md="2"
-                                            sm="2"
-                                        >
-                                            <v-text-field
-                                                label="Unit"
-                                                v-model="row_data.unit_name"
-                                                disabled
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                        <v-col
-                                            cols="12"
-                                            md="3"
-                                            sm="3"
-                                        >
-                                            <v-text-field
-                                                label="Cost"
-                                                v-model="row_data.unit_cost"
-                                                disabled
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col
-                                            cols="12"
-                                            md="6"
-                                            sm="6"
-                                        >
-                                            <v-text-field
-                                                label="Date Received"
-                                                v-model="row_data.date_received"
-                                                disabled
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                        <v-col
-                                            cols="12"
-                                            md="6"
-                                            sm="6"
-                                        >
-                                            <v-text-field
-                                                label="Expiration Date"
-                                                v-model="row_data.expiration_date"
-                                                disabled
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                        <v-col
-                                            cols="12"
-                                            md="12"
-                                            sm="12"
-                                        >
-                                            <v-card
-                                                flat
-                                                color="transparent"
-                                            >
-                                                <v-subheader>Transfer Amount ({{row_data.quantity}} Remaining)</v-subheader>
-
-                                                <v-card-text>
-                                                <v-row>
-                                                    <v-col class="pr-4">
-                                                    <v-slider
-                                                        v-model="transfer_quantity"
-                                                        class="align-center"
-                                                        :max="row_data.quantity"
-                                                        :min="1"
-                                                        hide-details
-                                                    >
-                                                        <template v-slot:append>
-                                                        <v-text-field
-                                                            v-model="transfer_quantity"
-                                                            class="mt-0 pt-0"
-                                                            hide-details
-                                                            single-line
-                                                            type="number"
-                                                            style="width: 60px"
-                                                        ></v-text-field>
-                                                        </template>
-                                                    </v-slider>
-                                                    </v-col>
-                                                </v-row>
-                                                </v-card-text>
-                                            </v-card>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                            <v-spacer></v-spacer>
-                                <v-btn
-                                    color="black"
-                                    text
-                                    @click="resetForm_2"
-                                >
-                                    Close
-                                </v-btn>
-                                <v-btn
-                                    color="black"
-                                    text
-                                    @click.prevent="transferInventory"
-                                >
-                                    Transfer
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </template>           
+                        Transfer
+                    </v-btn>
+                </template>        
             </v-data-table>
         </v-card>
     </v-container>
@@ -686,6 +683,7 @@
                     this.timestamp = dateTime;
             },
             onButtonClick(item){
+                this.dialog_2 = !this.dialog_2
                 this.row_data = item
                 console.log(this.row_data)
             },

@@ -125,147 +125,144 @@
                     hide-details
                 ></v-text-field>
             </v-card-title>
+            <v-dialog
+                v-model="dialog_2"
+                max-width="400px"
+                :retain-focus="false"
+            >
+                <v-card>
+                    <v-card-title>
+                        <span class="text-h5">Item Action</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col
+                                    cols="12"
+                                    md="12"
+                                    sm="12"
+                                >
+                                    <v-text-field
+                                        label="Item"
+                                        v-model="row_data.item_name"
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                                <v-col 
+                                    cols="12"
+                                    md="12"
+                                    sm="12"
+                                >
+                                    <v-text-field
+                                        label="Size"
+                                        type="number"
+                                        v-model="row_data.size"
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col 
+                                    cols="12"
+                                    md="6"
+                                    sm="6"
+                                >
+                                    <v-select
+                                        label="Unit"
+                                        :items="units"
+                                        v-model="row_data.unit_name"
+                                    >
+                                    </v-select>
+                                </v-col>
+                                <v-col
+                                    cols="12"
+                                    md="6"
+                                    sm="6"
+                                >
+                                    <v-text-field
+                                        label="Unit Cost"
+                                        type="number"
+                                        v-model="row_data.unit_cost"
+                                    >
+                                    </v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+                        <v-btn
+                            color="red darken-2"
+                            text
+                            @click.prevent="dialog_3=true"
+                        >
+                            Delete
+                        </v-btn>
+                        <v-btn
+                            color="blue"
+                            text
+                            @click.prevent="editItem"
+                        >
+                            Save
+                        </v-btn>
+                    </v-card-actions>
+                    <v-dialog
+                        v-model="dialog_3"
+                        max-width="300"
+                        :retain-focus="false"
+                    >
+                        <v-card>
+                            <v-card-title>
+                            Are you sure?
+
+                            <v-spacer />
+
+                            <v-icon
+                                aria-label="Close"
+                                @click="dialog_3 = false"
+                            >
+                                mdi-close
+                            </v-icon>
+                            </v-card-title>
+
+                            <v-card-text class="pb-6 pt-12 text-center">
+                            <v-btn
+                                class="mr-3"
+                                text
+                                @click="dialog_3 = false"
+                            >
+                                Nevermind
+                            </v-btn>
+
+                            <v-btn
+                                color="red darken-2"
+                                text
+                                @click="itemDelete"
+                            >
+                                Yes
+                            </v-btn>
+                            </v-card-text>
+                        </v-card>
+                        </v-dialog>
+                </v-card>
+            </v-dialog>
             <v-data-table
                 :headers="headers"
                 :items="items"
                 :search="search"
             >
                 <template v-slot:[`item.action`]="{ item }">
-                    <v-dialog
-                        v-model="dialog_2"
-                        max-width="400px"
-                        :retain-focus="false"
+                        
+                    <v-btn 
+                        small
+                        @click.prevent="onButtonClick(item)"
+                        icon
                     >
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn 
-                                small
-                                @click.prevent="onButtonClick(item)"
-                                v-bind="attrs"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>
-                                    mdi-circle-edit-outline
-                                </v-icon>
-                                
-                            </v-btn>
-                        </template>
-                        <v-card>
-                            <v-card-title>
-                                <span class="text-h5">Item Action</span>
-                            </v-card-title>
-                            <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col
-                                            cols="12"
-                                            md="12"
-                                            sm="12"
-                                        >
-                                            <v-text-field
-                                                label="Item"
-                                                v-model="row_data.item_name"
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                        <v-col 
-                                            cols="12"
-                                            md="12"
-                                            sm="12"
-                                        >
-                                            <v-text-field
-                                                label="Size"
-                                                type="number"
-                                                v-model="row_data.size"
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col 
-                                            cols="12"
-                                            md="6"
-                                            sm="6"
-                                        >
-                                            <v-select
-                                                label="Unit"
-                                                :items="units"
-                                                v-model="row_data.unit_name"
-                                            >
-                                            </v-select>
-                                        </v-col>
-                                        <v-col
-                                            cols="12"
-                                            md="6"
-                                            sm="6"
-                                        >
-                                            <v-text-field
-                                                label="Unit Cost"
-                                                type="number"
-                                                v-model="row_data.unit_cost"
-                                            >
-                                            </v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                            <v-spacer></v-spacer>
-                                <v-btn
-                                    color="red darken-2"
-                                    text
-                                    @click.prevent="dialog_3=true"
-                                >
-                                    Delete
-                                </v-btn>
-                                <v-btn
-                                    color="blue"
-                                    text
-                                    @click.prevent="editItem"
-                                >
-                                    Save
-                                </v-btn>
-                            </v-card-actions>
-                            <v-dialog
-                                v-model="dialog_3"
-                                max-width="300"
-                                :retain-focus="false"
-                            >
-                                <v-card>
-                                    <v-card-title>
-                                    Are you sure?
-
-                                    <v-spacer />
-
-                                    <v-icon
-                                        aria-label="Close"
-                                        @click="dialog_3 = false"
-                                    >
-                                        mdi-close
-                                    </v-icon>
-                                    </v-card-title>
-
-                                    <v-card-text class="pb-6 pt-12 text-center">
-                                    <v-btn
-                                        class="mr-3"
-                                        text
-                                        @click="dialog_3 = false"
-                                    >
-                                        Nevermind
-                                    </v-btn>
-
-                                    <v-btn
-                                        color="red darken-2"
-                                        text
-                                        @click="itemDelete"
-                                    >
-                                        Yes
-                                    </v-btn>
-                                    </v-card-text>
-                                </v-card>
-                                </v-dialog>
-                        </v-card>
-                    </v-dialog>
+                        <v-icon>
+                            mdi-circle-edit-outline
+                        </v-icon>
+                        
+                    </v-btn>
                 </template>
             </v-data-table>
         </v-card>
@@ -472,6 +469,7 @@
             },
             onButtonClick(item){
                 this.row_data = item
+                this.dialog_2 = !this.dialog_2
                 console.log("Row Data: " + this.row_data.id)
             },     
             editButton(){
