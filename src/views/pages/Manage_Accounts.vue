@@ -17,12 +17,12 @@
             class="v-card-profile"
             v-bind:avatar= "profile.avatar_url"
             >
-            <v-card-text class="text-center" style="overflow-y: auto; height:250px">
-                <h6 class="display-1 mb-1 grey--text">
+            <v-card-text class="text-center" style="overflow-y: auto; height:225px">
+                <h6 class="headline mb-1 grey--text">
                     {{ profile.role_name }}
                 </h6>
 
-                <h4 class="display-2 font-weight-light mb-3 black--text">
+                <h4 class="headline font-weight-light mb-3 black--text">
                 {{ profile.first_name }} {{ profile.last_name }}
                 </h4>
 
