@@ -27,7 +27,7 @@
                     cols="12"
                     md="12"
                 >
-                    <v-avatar size="100">
+                    <v-avatar size="100" v-if="profile != null">
                     <v-img
                         :src="profile.avatar_url"
                         alt=""
@@ -42,8 +42,11 @@
                         cols="12"
                         md="12"
                     >
-                        <p class="white--text subheading">
+                        <p class="white--text subheading" v-if="profile != null">
                             {{ profile.first_name + " " + profile.last_name}}
+                        </p>
+                        <p class="white--text subheading" v-if="profile == null">
+                            New User
                         </p>
                     
                     </v-col>
@@ -55,7 +58,17 @@
                         cols="12"
                         md="12"
                     >
-                        <p class="white--text subheading">
+                        <p 
+                            class="white--text subheading"
+                            v-if="profile == null"
+                        >
+
+                        </p>
+
+                        <p 
+                            class="white--text subheading"
+                            v-if="profile != null"
+                        >
                             {{ profile.roles.role_name}}
                         </p>
                     
@@ -137,6 +150,9 @@
         },
         mounted(){
             console.log("USER " + this.user)
+            if(this.profile == null){
+                console.log("PROFILE " + this.profile)
+            }
         },
         methods: {
             async handleLogout () {
