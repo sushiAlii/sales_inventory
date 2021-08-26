@@ -3,7 +3,7 @@
     <v-container
         id="user-profile"
         tag="section"
-        fill-height
+        
         fluid
     >
         <v-row class="my-10" justify="center">
@@ -140,6 +140,7 @@
     import Navbar from '@/components/Navbar'
     import MaterialCard from '@/components/MaterialCard.vue'
     import { supabase } from '@/supabase'
+    import { Store } from "vuex";
     
 
     export default {
@@ -224,6 +225,7 @@
                     console.log('Update Failed! Please check you data.')
                 }else{
                     console.log(data)
+                    this.$store.dispatch("loadProfile")
                 }
             },
             async uploadAvatar(file){

@@ -45,7 +45,7 @@
                         <v-btn
                             text
                             color="primary"
-                            @click="menu2 = false"
+                            @click="resetDate"
                         >
                             Cancel
                         </v-btn>
@@ -181,7 +181,7 @@
                                 </v-row>
                             </v-form>
                             </v-container>
-                        <small>*indicates required field</small>
+                    
                         </v-card-text>
                         <v-card-actions>
                         <v-spacer></v-spacer>
@@ -381,16 +381,33 @@
                 :items="stocks"
                 :search="search"
             >
-                <template v-if="filtered==false" v-slot:[`item.action`]="{ item }">
-                    <v-btn 
-                        x-small
-                        @click.prevent="onButtonClick(item)"
-                        color="green lighten-2"
-                        v-bind="attrs"
-                        v-on="on"
+                <template v-slot:[`item.action`]="{ item }">
+                    <v-tooltip
+                        bottom
                     >
-                        Transfer
-                    </v-btn>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn 
+                                x-small
+                                @click.prevent="onButtonClick(item)"
+                                color="green lighten-2"
+                                :disabled = "filtered"
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                Transfer
+                            </v-btn>
+                        </template>
+                        <span 
+                            
+                        >
+                            Cannot Transfer on date range
+                        </span>
+                        <!-- <span 
+                            v-else
+                        >
+                            Transfer to Operation
+                        </span> -->
+                    </v-tooltip>
                 </template>        
             </v-data-table>
         </v-card>
@@ -686,6 +703,11 @@
                 this.dialog_2 = !this.dialog_2
                 this.row_data = item
                 console.log(this.row_data)
+            },
+            async resetDate (){
+                await this.loadInventory()
+                this.menu2 = false
+                this.dates = ['','']
             },
             resetForm () {
                 
