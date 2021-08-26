@@ -9,7 +9,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: [],
-    profile: []
+    profile: null
   },
   getters: {
     getUser(state) {
@@ -28,6 +28,30 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async loadProfile({ getters, commit }){
+      console.log("Hello hello")
+      console.log(getters.getUser.id)
+      try{
+        let { data: profiles, error } = await supabase
+                .from('profiles')
+                .select(`
+                    id, 
+                    first_name, 
+                    last_name, 
+                    about_me,  
+                    avatar_url,
+                    roles(
+                        role_name
+                    )
+                    `)
+                .eq('id',getters.getUser.id)
+
+                  console.log("from Vuex: " + profiles[0])
+                  commit('setProfile', profiles[0])
+      }catch(error){
+        console.log(error)
+      }
+    },
     async signInAction( { commit }, formData){
       try{
         let { user, error } = await supabase.auth.signIn({
