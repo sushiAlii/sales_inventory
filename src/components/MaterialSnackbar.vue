@@ -12,7 +12,7 @@
       :color="$attrs.color"
       :dismissible="dismissible"
       :type="type"
-      class="ma-0"
+      class="ma-n2"
       dark
     >
       <slot />
