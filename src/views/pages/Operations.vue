@@ -1,5 +1,7 @@
 <template>
-    <v-container>
+    <v-container
+        fluid
+    >
         <v-row>
             <v-col></v-col>
             <v-col
@@ -9,11 +11,12 @@
             <v-menu
                 v-model="menu"
                 ref="menu"
+
                 :close-on-content-click="false"
                 :return-value.sync="date"
                 transition="scale-transition"
                 offset-y
-                min-width="auto"
+                max-width="300"
             >
                 <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -40,7 +43,7 @@
                     <v-btn
                         text
                         color="primary"
-                        @click="menu = false"
+                        @click="resetDate"
                     >
                         Cancel
                     </v-btn>
@@ -179,6 +182,7 @@
             async loadNewOperations () {
                 console.log(this.dates)
                 
+                this.menu=false;
                 let { data, error } = await supabase
                     .rpc('getfilterdoperation', {
                         date_end: this.dates[1], 
@@ -187,12 +191,16 @@
                     if (error) {
                         console.error(error)
                     }else {
-                        console.log('Data: ' + data[0].item_size)
                         this.operations = data;
                         console.log("New Operation: " + this.operations)
                     }
-                this.menu=false;
                 
+            },
+            async resetDate(){
+                await this.loadOperations()
+                this.dates = ['','']
+                this.menu = false
+
             },
             getCurrentDate(){
                 const today = new Date();
