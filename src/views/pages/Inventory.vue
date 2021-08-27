@@ -1,10 +1,11 @@
 <template>
     <v-container
-        
+        fluid
     >
             <v-row
-                justify="end"
+                
             >
+            <v-spacer></v-spacer>
                 <v-col
                     justify="end"
                     align="end"
@@ -19,7 +20,7 @@
                         :return-value.sync="date2"
                         transition="scale-transition"
                         offset-y
-                        min-width="auto"
+                        max-width="300"
                     >
                         <template v-slot:activator="{ on, attrs }">
                         <v-text-field
