@@ -443,6 +443,8 @@
             async deleteUser(){
                 try{
                 console.log("Delete User")
+                this.deleteDialog = false
+                this.editDialog = false
 
                 const { data: profile, error: error1 } = await supabase
                 .from('profiles')
@@ -459,8 +461,7 @@
                         }else{
                             console.log("Delete success")
                         }
-                this.deleteDialog = false
-                this.editDialog = false
+                this.loadUsers()
                 }catch(error){
                     console.log(error)
                 }
