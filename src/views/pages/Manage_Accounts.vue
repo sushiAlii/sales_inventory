@@ -239,7 +239,7 @@
                 [parsedDirection[1]]: true
             }"
         >
-        <span class="font-weight-bold">&nbsp;OPERATION SUCCESS!&nbsp;</span> 
+        <span class="font-weight-bold">&nbsp;USER CREATED!&nbsp;</span>Email has been sent for verification. 
     </base-material-snackbar>
 </v-container>
 </template>
