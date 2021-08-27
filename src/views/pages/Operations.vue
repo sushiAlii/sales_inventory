@@ -125,31 +125,32 @@
                         value: 'unit_name'
                     },
                     {
-                        text: 'Used',
+                        text: 'Collected Exp.',
                         value: 'used'
                     },
                     {
-                        text: 'Total',
+                        text: 'Cost of Exp.',
                         value: 'total' 
                     },
                                         {
-                        text: 'Daily Used',
+                        text: 'Collected Exp.(Daily)',
                         value: 'daily_used' 
                     },
                                         {
-                        text: 'Daily Total',
+                        text: 'Cost of Exp.(Daily)',
                         value: 'daily_total' 
                     },
                                         {
-                        text: 'Weekly Used',
+                        text: 'Collected Exp.(Weekly)',
                         value: 'weekly_used' 
                     },
                                         {
-                        text: 'Weekly Total',
+                        text: 'Cost of Exp.(Weekly)',
                         value: 'weekly_total' 
                     },
                                         {
                         text: 'Item Util.',
+                        align: 'end',
                         value: 'item_util' 
                     },
                 ],
