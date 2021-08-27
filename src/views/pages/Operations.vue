@@ -74,6 +74,8 @@
                 :headers="headers"
                 :items="operations"
                 :search="search"
+                :loading="loading"
+                loading-text="Loading Operations... It might take a while"
             >
             </v-data-table>
         </v-card>
@@ -98,18 +100,7 @@
                 menu: false,
                 dates: ['',''],
                 operations: [],
-                items: [
-                    {
-                        text: 'Stock',
-                        disabled: false,
-                        href: '/inventory'
-                    },
-                    {
-                        text: 'Operations',
-                        disabled: true,
-                        href: '/operations'
-                    }
-                ],
+                loading: false,
                 headers: [
                     {
                         text: 'Item',
@@ -167,6 +158,7 @@
         },
         methods: {
             async loadOperations () {
+                this.loading = true
                 let { data, error } = await supabase
                     .from('operation_view')
                     .select('*')
@@ -178,9 +170,11 @@
                 }else{
                     console.log('Success Query')
                     this.operations = data;
+                    this.loading = false
                 }
             },
             async loadNewOperations () {
+                this.loading = true
                 console.log(this.dates)
                 
                 this.menu=false;
@@ -194,6 +188,7 @@
                     }else {
                         this.operations = data;
                         console.log("New Operation: " + this.operations)
+                        this.loading = false
                     }
                 
             },

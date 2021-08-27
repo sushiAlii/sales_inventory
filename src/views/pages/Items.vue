@@ -250,6 +250,8 @@
                 :headers="headers"
                 :items="items"
                 :search="search"
+                :loading="loading"
+                loading-text="Loading Items... It might take a while"
             >
                 <template v-slot:[`item.action`]="{ item }">
                         
@@ -306,6 +308,7 @@
                 dialog: false,
                 dialog_2: false,
                 dialog_3: false,
+                loading: false,
                 units: [],
                 units_array: [],
                 items: [],
@@ -350,11 +353,19 @@
         },
         methods: {
             async loadItems() {
+                this.loading = true
                 let { data: item_view, error } = await supabase
                     .from('item_view')
                     .select('*')
                     .order('item_name', { descending: false })
-                this.items = item_view;
+
+                    if(error){
+                        console.log(error)
+                    }else{
+                        this.items = item_view;
+                        this.loading = false
+                    }
+                
             },
             async loadUnits() {
                 let { data: unit, error } = await supabase

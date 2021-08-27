@@ -381,6 +381,8 @@
                 :headers="headers"
                 :items="stocks"
                 :search="search"
+                :loading="loading"
+                loading-text="Loading stocks... It might take a while"
             >
                 <template v-slot:[`item.action`]="{ item }">
                     <v-tooltip
@@ -436,6 +438,7 @@
                 date: null,
                 date2: '',
                 dates: ['',''],
+                loading: false,
                 menu: false,
                 menu2: false,
                 filtered: false,
@@ -538,6 +541,7 @@
         },
         methods: {
             async loadInventory () {
+                this.loading = true
                 let { data, error } = await supabase
                     .from('stock')
                     .select('*')
@@ -554,6 +558,7 @@
                     this.filtered = false
                     console.log('Success Query')
                     this.stocks = data;
+                    this.loading=false
                 }
                 
             },
@@ -657,6 +662,7 @@
                 this.dialog_2=false
             },
             async getFilteredData(){
+                this.loading=true
                 console.log(this.dates)
                 try{
                     let { data, error } = await supabase
@@ -677,6 +683,7 @@
                         this.menu2 = false
                         this.stocks = data
                         console.log(this.date2)
+                        this.loading=false
                     }
                 }catch(error){
                     console.log(error)
