@@ -220,12 +220,34 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <base-material-snackbar
+        v-model="snackbars.createUser.fail"
+        type="error"
+        v-bind="{ 
+                [parsedDirection[0]]: true,
+                [parsedDirection[1]]: true
+            }"
+        >
+        User Creation<span class="font-weight-bold">&nbsp;FAILED&nbsp;</span>
+        Email is already<span class="font-weight-bold">&nbsp;taken&nbsp;</span>, or both the email and the password are not<span class="font-weight-bold">&nbsp;valid.&nbsp;</span>
+    </base-material-snackbar>
+    <base-material-snackbar
+        v-model="snackbars.createUser.success"
+        type="success"
+        v-bind="{ 
+                [parsedDirection[0]]: true,
+                [parsedDirection[1]]: true
+            }"
+        >
+        <span class="font-weight-bold">&nbsp;OPERATION SUCCESS!&nbsp;</span> 
+    </base-material-snackbar>
 </v-container>
 </template>
 
 <script>
     import Navbar from '@/components/Navbar'
     import MaterialCard from '@/components/MaterialCard.vue'
+    import MaterialSnackbar from '@/components/MaterialSnackbar'
     import { mapGetters } from 'vuex'
     import { supabase } from '@/supabase'
 
@@ -235,7 +257,8 @@
 
         components: {
             Navbar,
-            'base-material-card': MaterialCard
+            'base-material-card': MaterialCard,
+            'base-material-snackbar': MaterialSnackbar
         },
         data () {
             return {
@@ -268,6 +291,13 @@
                     }
                 },
                 profiles: [],
+                snackbars: {
+                    direction: 'top center',
+                    createUser: {
+                        success: false,
+                        fail: false
+                    }
+                }
             }
         },
         mounted(){
@@ -278,10 +308,15 @@
             ...mapGetters({
                 user: 'getUser',
                 user_profile: 'getProfile'
-            })
+            }),
+          
+            parsedDirection () {
+                return this.snackbars.direction.split(' ')
+            },
         },
         methods: {
             async handleRegister () {
+                this.dialog = false
                 try{
                     const { user, session, error } =  await supabase.auth.signUp({
                     email: this.userCreate.email,
@@ -289,14 +324,16 @@
                     })
                     if(error){
                         console.log('Register failed!')
+                        this.snackbars.createUser.fail = !this.snackbars.createUser.fail
                     }else{
                         console.log('Register Success! Email Sent')
+                        this.snackbars.createUser.success = !this.snackbars.createUser.success
                     }
                 }catch(error){
                     console.log(error);
+                    this.createUser.fail = !this.createUser.fail
                 }
                 this.$refs.form.reset()
-                this.dialog = false
             },
             async loadUsers(){
                 try{
@@ -416,15 +453,14 @@
                         this.userEdit.user_id,
                         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNjI2ODc4ODg0LCJleHAiOjE5NDI0NTQ4ODR9.qlxDnWe74GCiJLSmZ63p3t2ISC1VqUAGs6HzvxdH974'
                     )
-
                         if(error1 && error2){
                             console.log("error in deleting profile" + error1)
                             console.log("error in deleting user" + error1)
                         }else{
                             console.log("Delete success")
                         }
-                this.deleteDialog = !this.deleteDialog
-                this.editDialog = !this.editDialog
+                this.deleteDialog = false
+                this.editDialog = false
                 }catch(error){
                     console.log(error)
                 }
