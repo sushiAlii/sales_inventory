@@ -7,11 +7,10 @@
             >
             <v-spacer></v-spacer>
                 <v-col
-                    justify="end"
                     align="end"
                     cols="12"
                     md="2"
-                    sm="3"
+                    sm="2"
                 >
                     <v-menu
                         ref="menu2"
@@ -61,10 +60,10 @@
                     </v-menu>
                 </v-col>
                 <v-col
-                    justify="end"
                     align="end"
                     cols="12"
                     md="1"
+                    sm="1"
                 >
                     <v-dialog
                         v-model="dialog"

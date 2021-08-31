@@ -169,6 +169,7 @@
                     console.log(error)
                 }else{
                     console.log('Success Query')
+                    console.log(data)
                     this.operations = data;
                     this.loading = false
                 }

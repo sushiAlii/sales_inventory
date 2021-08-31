@@ -10,6 +10,7 @@
             <v-col
                 cols="12"
                 md="9"
+                sm="9"
             >
                 <base-material-chart-card
                     :data="inventoryChart.data"
@@ -60,7 +61,7 @@
                     </h4>
 
                     <p class="d-inline-flex font-weight-light ml-2 mt-1">
-                        Quantity per Item
+                        Remaining Stock for every Item
                     </p>
 
                     <template v-slot:actions>
@@ -70,13 +71,14 @@
                         >
                         mdi-clock-outline
                         </v-icon>
-                        <span class="caption grey--text font-weight-light">updating every transaction</span>
+                        <span class="caption grey--text font-weight-light">Updated {{ inventoryChart.data.date }}</span>
                     </template>
                     </base-material-chart-card>
             </v-col>
             <v-col
             cols="12"
             md="3"
+            sm="3"
             >
                 <base-material-stats-card
                     color="warning"
@@ -89,10 +91,13 @@
                 />
             </v-col>
         </v-row>
-        <v-row>
+        <v-row  
+            class="my-10"   
+        >
             <v-col
             cols="12"
             md="3"
+            sm="3"
             >
                 <base-material-stats-card
                     color="success"
@@ -107,6 +112,7 @@
                 
                 cols="12"
                 md="9"
+                sm="9"
             >
                 <base-material-chart-card
                     :data="operationChart.data"
@@ -157,19 +163,49 @@
                     </h4>
 
                     <p class="d-inline-flex font-weight-light ml-2 mt-1">
-                        Quantity(Used)  per Item
+                        Collected Exp. for every Item
                     </p>
 
                     <template v-slot:actions>
                         <v-icon
                         class="mr-1"
-                        small
+                        small 
                         >
                         mdi-clock-outline
                         </v-icon>
-                        <span class="caption grey--text font-weight-light">updating every transaction</span>
+                        <span class="caption grey--text font-weight-light">Updated {{ operationChart.data.date }}</span>
                     </template>
                     </base-material-chart-card>
+            </v-col>
+        </v-row>
+        <v-row
+            class="my-10"
+        >
+            <v-col
+                cols="12"
+                md="6"
+                sm="6"
+            >
+                <base-material-card
+                    color="red darken-2"
+                    class="px-5 py-3"
+                >
+                    <template v-slot:heading>
+                        <div class="headline font-weight-light">
+                            Empty Stocks
+                        </div>
+
+                        <div class="subtitle-2 font-weight-light">
+                            Items that have no remaining stocks left
+                        </div>
+                    </template>
+                    <v-card-text>
+                        <v-data-table
+                        :headers="emptyStocksTable.headers"
+                        :items="emptyStocksTable.stocks"
+                        />
+                    </v-card-text>
+                </base-material-card>
             </v-col>
         </v-row>
     </v-container>
@@ -177,8 +213,10 @@
 
 <script>
     import Navbar from '@/components/Navbar'
+    import MaterialCard from '@/components/MaterialCard'
     import MaterialChartCard from '@/components/MaterialChartCard'
     import MaterialStatsCard from '@/components/MaterialStatsCard'
+    import moment from 'moment'
     import { supabase } from '@/supabase'
 
     export default {
@@ -186,6 +224,7 @@
 
         components: {
             Navbar,
+            'base-material-card': MaterialCard,
             'base-material-chart-card': MaterialChartCard,
             'base-material-stats-card': MaterialStatsCard
         },
@@ -208,7 +247,8 @@
                         labels: [],
                         series: [
                             [0],
-                        ]
+                        ],
+                        date: ''
                     },
                     options: {
                         axisX: {
@@ -239,7 +279,8 @@
                         labels: [],
                         series: [
                             [0],
-                        ]
+                        ],
+                        date: ''
                     },
                     options: {
                         axisX: {
@@ -265,6 +306,21 @@
                         }],
                     ],
                 },
+                emptyStocksTable: {
+                    stocks: [],
+                    headers: [
+                        {
+                            text: 'Item',
+                            align: 'start',
+                            value: 'item_name'
+                        },
+                        {
+                            text: 'Price',
+                            align: 'end',
+                            value: 'unit_cost'
+                        }
+                    ]
+                }
             }
         },
         created(){
@@ -272,6 +328,9 @@
             this.initializeOperationChart()
             this.initializeLowestStock()
             this.initializeHighUtil()
+            this.getEmptyStocks()
+            this.getInventoryRecentDate()
+            this.getOperationRecentDate()
         },
         mounted(){
 
@@ -358,11 +417,61 @@
                     console.log(error)
                 }
             },
+            async getEmptyStocks(){
+                try{
+
+                    let { data: empty_stocks, error } = await supabase
+                    .from('empty_stocks')
+                    .select('*')
+                    
+                    if(error){
+                        console.log(error)
+                    }else{
+                        console.log(empty_stocks)
+                        this.emptyStocksTable.stocks = empty_stocks
+                        console.log(this.emptyStocksTable.stocks)
+                    }
+
+                }catch(error){
+                    console.log(error)
+                }
+            },  
             async getInventoryRecentDate(){
-                let { data, error } = await supabase
-                    .from('stock_inventory')
-                    .select('date_received')
+
+                try{
+                    let { data, error } = await supabase
+                    .from('inventory_recent_date')
+                    .select('*')
+
+                    if(error){
+                        console.log(error)
+                    }else{
+                        console.log(data[0].date)
+                        this.inventoryChart.data.date = moment(data[0].date).calendar()
+                        console.log(this.inventoryChart.data.date)
+                    }
+
+                }catch(error){
+                    console.log(error)
+                }
                      
+            },
+            async getOperationRecentDate(){
+                try{
+                    let { data , error } = await supabase
+                    .from('operation_recent_date')
+                    .select('*')
+
+                        if(error){
+                            console.log(error)
+                        }else{
+                            this.operationChart.data.date = moment(data[0].date).calendar()
+                            console.log("from operation date")
+                            console.log(data)
+                        }
+                }catch(error){
+
+                }
             },
             removeNullValue(array){
                 for(let i = 0; i<array.length;i++){

@@ -41,7 +41,7 @@
                                     </v-col>
                                     <v-col
                                         cols="12"
-                                        md="12"
+                                        md="5"
                                     >
                                         <v-text-field
                                             label="Price"
@@ -50,6 +50,17 @@
                                             required
                                         >
                                         </v-text-field>
+                                    </v-col>
+                                    <v-col
+                                        cols="12"
+                                        md="6"
+                                    >
+                                        <v-select
+                                            :items="item_type.type_name"
+                                            label="Type"
+                                            v-model="item_type.type"
+                                        >  
+                                        </v-select>
                                     </v-col>
                                     <v-col
                                         jusify="right"
@@ -315,6 +326,11 @@
                 row_data: [],
                 disabled_field: true,
                 custom_unit_field: true,
+                item_type: {
+                    type: '',
+                    type_name: [],
+                    type_array: [],
+                },
                 snackbars: {
                     success: false,
                     fail: false,
@@ -324,6 +340,11 @@
                         text: 'Item',
                         align: 'start',
                         value: 'item_name'
+                    },
+                    {
+                        text: 'Type',
+                        align: 'start',
+                        value: 'type'
                     },
                     {
                         text: 'Size',
@@ -336,6 +357,7 @@
                     },
                     {
                         text: 'Unit Cost',
+                        align: 'end',
                         value: 'unit_cost'
                     },
                     {
@@ -350,6 +372,7 @@
         mounted() {
             this.loadItems()
             this.loadUnits()
+            this.loadItemType()
         },
         methods: {
             async loadItems() {
@@ -362,12 +385,13 @@
                     if(error){
                         console.log(error)
                     }else{
+                        console.log(item_view)
                         this.items = item_view;
                         this.loading = false
                     }
-                
             },
             async loadUnits() {
+                console.log("Load Unit")
                 let { data: unit, error } = await supabase
                     .from('unit')
                     .select('*')
@@ -385,23 +409,30 @@
         
             async saveItems(){
                 // console.log(this.unit_name)
-
                 if(this.unit_name == null){
-                    const { data, error } = await supabase
-                    .from('items')
-                    .insert([
-                        { 
-                            item_name: this.item_name, 
-                            unit_cost: this.unit_cost 
-                        },
-                    ])
-                    this.dialog = false
-                    if(error){
-                        console.log(error)
+                    for(let i = 0;i<this.item_type.type_array.length;i++){
+                        if(this.item_type.type_array[i].type == this.item_type.type){
+                            console.log("Hello")
+                            const { data, error } = await supabase
+                            .from('items')
+                            .insert([
+                                { 
+                                    item_name: this.item_name, 
+                                    unit_cost: this.unit_cost,
+                                    type_id: this.item_type.type_array[i].id
 
-                    }else{
-                        console.log('Item Registered!')
-                        this.resetForm()
+                                },
+                            ])
+                            this.dialog = false
+                            if(error){
+                                console.log(error)
+                                console.log("oops")
+
+                            }else{
+                                console.log('Item Registered!')
+                                this.resetForm()
+                            }
+                        }
                     }
                 }else{
                     for(let i = 0;i<this.units_array.length;i++){
@@ -476,6 +507,25 @@
                         }
                 }catch(error){
                     console.log("Error!" + error)
+                }
+            },
+            async loadItemType(){
+                console.log("Item Type")
+                try{
+                    let { data, error } = await supabase
+                    .from('item_type')
+                    .select('*')
+                    if(error){
+                        console.log(error)
+                    }else{
+                        console.log(data)
+                        this.item_type.type_array = data
+                        for(let i = 0;i < data.length;i++){
+                            this.item_type.type_name[i] = data[i].type
+                        }
+                    }
+                }catch(error){
+                    console.log(error)
                 }
             },
             onButtonClick(item){
