@@ -8,11 +8,11 @@
     <template v-slot:after-heading>
       <div class="ml-auto text-right">
         <div
-          class="body-3 grey--text font-weight-light"
+          class="subtitle-2 grey--text font-weight-light ml-n4"
           v-text="title"
         />
 
-        <h3 class="display-2 font-weight-light text--primary">
+        <h3 class="headline font-weight-light text--primary">
           {{ value }} <small>{{ smallValue }}</small>
         </h3>
       </div>
