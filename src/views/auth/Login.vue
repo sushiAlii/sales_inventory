@@ -26,22 +26,27 @@
                                     </v-card-title>
                                 </v-col>
                                 
-                                    <v-form class="" @submit.prevent="handleLogin">
+                                    <v-form 
+                                        ref="loginForm"
+                                        @submit.prevent="handleLogin"
+                                    >
                                         <v-row>
                                             <v-col
                                                 cols="12"
                                                 md="12"
                                             >
                                                 <v-text-field
-                                                label="Email"
-                                                name="email"
-                                                append-icon="mdi-email"
-                                                dense
-                                                outlined
-                                                filled
-                                                type="text"
-                                                color="white"
-                                                v-model="formData.email"
+                                                    label="Email"
+                                                    name="email"
+                                                    append-icon="mdi-email"
+                                                    dense
+                                                    outlined
+                                                    filled
+                                                    type="text"
+                                                    color="white"
+                                                    v-model="formData.email"
+                                                    :rules="[rules.required, rules.email]"
+                                                    :error-messages="login ? 'Incorrect email or password' : null"
                                                 />
                                             </v-col>
                                             <v-col
@@ -58,6 +63,8 @@
                                                 type="password"
                                                 color="white"
                                                 v-model="formData.password"
+                                                :rules="[rules.required, rules.counter]"
+                                                :error-messages="login ? 'Incorrect email or password' : null"
                                                 />
                                             </v-col>
                                             <v-col
@@ -79,8 +86,9 @@
 </template>
 
 <script>
-    import { supabase } from '@/supabase'
-    import { Store } from "vuex";
+
+    import { mapGetters } from 'vuex'
+
 
 
     export default {
@@ -97,12 +105,51 @@
                     email: '',
                     password: '',
                 },
-
+                rules: {
+                    required: value => !!value || 'Required.',
+                    counter: value => (value.length <= 20) || 'Max 20 characters',
+                    email: value => {
+                        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                        return pattern.test(value) || 'Invalid e-mail.'
+                    },
+                },
             }
+        },
+        computed:{
+            ...mapGetters({
+                login: 'getLogin'
+            })
+        },
+        mounted(){
+            console.log(this.login)
         },
         methods: {
             async handleLogin () {
-                this.$store.dispatch("signInAction", this.formData)
+    
+                try{
+                    if(this.$refs.loginForm.validate()){
+                        console.log(this.login)
+                        this.$store.dispatch("signInAction", this.formData)
+                        console.log(this.login)
+
+                        if(this.login){
+                            console.log("Login Failed")
+                        }
+                        // if(this.$store.dispatch("signInAction", this.formData)){
+                        //     console.log("Login Success!")
+                        // }else{
+                        //     console.log("Login Failed!")
+                        //     this.loginFailed = true
+                        //     this.formData.password = ''
+                        // }
+                    }else{
+                        
+                        this.formData.password = ''
+                    }
+               
+                }catch(error){
+                    this.$refs.loginForm.validate()
+                }
 
             },
         }

@@ -9,7 +9,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: [],
-    profile: null
+    profile: null,
+    login: null
   },
   getters: {
     getUser(state) {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     getProfile(state) {
       return state.profile
     },
+    getLogin(state){
+      return state.login
+    }
   },
   mutations: { 
     setUser(state, payload) {
@@ -25,6 +29,9 @@ export default new Vuex.Store({
     },
     setProfile(state, payload){
       state.profile = payload
+    },
+    setLogin(state, payload){
+      state.login = payload
     }
   },
   actions: {
@@ -45,7 +52,7 @@ export default new Vuex.Store({
                     )
                     `)
                 .eq('id',getters.getUser.id)
-
+                  
                   console.log("from Vuex: " + profiles[0])
                   commit('setProfile', profiles[0])
       }catch(error){
@@ -53,17 +60,20 @@ export default new Vuex.Store({
       }
     },
     async signInAction( { commit }, formData){
+      
       try{
         let { user, error } = await supabase.auth.signIn({
           email: formData.email,
           password: formData.password
         })
         if(error){
+          commit('setLogin', true)
           console.log(error)
         }else{
+          commit('setLogin', false)
           console.log(user)
           commit('setUser', user)
-
+          
                 let { data: profiles, error } = await supabase
                 .from('profiles')
                 .select(`
@@ -77,13 +87,18 @@ export default new Vuex.Store({
                     )
                     `)
                 .eq('id',user.id)
-          
-          console.log(profiles[0])
-          commit('setProfile', profiles[0])
-          await router.push('/')
 
+                  if(error){
+                    console.log("Hi")
+                  }else{
+                    console.log(profiles[0])
+                    console.log("Hello")
+                    commit('setProfile', profiles[0])
+                    await router.push('/')
+                  }
         }
       }catch(error){
+        console.log("Hello")
         console.log(error)
       }
     },
