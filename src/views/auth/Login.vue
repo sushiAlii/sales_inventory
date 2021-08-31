@@ -132,8 +132,9 @@
                         this.$store.dispatch("signInAction", this.formData)
                         console.log(this.login)
 
-                        if(this.login){
+                        if(this.login == false){
                             console.log("Login Failed")
+                            this.formData.password = ''
                         }
                         // if(this.$store.dispatch("signInAction", this.formData)){
                         //     console.log("Login Success!")
