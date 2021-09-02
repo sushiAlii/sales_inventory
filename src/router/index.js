@@ -11,7 +11,6 @@ import Accounts from '../views/pages/Accounts.vue'
 import ManageAccounts from '../views/pages/Manage_Accounts.vue'
 import Miscellaneous from '../views/pages/Miscellaneous.vue'
 import Login from '../views/auth/Login.vue'
-import Test from '../views/pages/Test.vue'
 
 Vue.use(VueRouter)
 
@@ -69,11 +68,6 @@ const routes = [
         name: 'Miscellaneous',
         component: Miscellaneous
       },
-      {
-        path: '/test',
-        name: 'Test',
-        component: Test
-      }
     ]
   },
 
