@@ -316,6 +316,11 @@
                             value: 'item_name'
                         },
                         {
+                            text: 'Type',
+                            align: 'start',
+                            value: 'type'
+                        },
+                        {
                             text: 'Price',
                             align: 'end',
                             value: 'unit_cost'
