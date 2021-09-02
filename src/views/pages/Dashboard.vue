@@ -159,7 +159,7 @@
                     </template>
 
                     <h4 class="card-title font-weight-light mt-2 ml-2">
-                        Operation Overview
+                        Operation Overview <span class="grey--text font-weight-light"> -- last 30 days</span>
                     </h4>
 
                     <p class="d-inline-flex font-weight-light ml-2 mt-1">
@@ -280,7 +280,8 @@
                         series: [
                             [0],
                         ],
-                        date: ''
+                        date: '',
+                        month: ''
                     },
                     options: {
                         axisX: {
@@ -370,6 +371,7 @@
                     if(error){
                         console.log("Operation Chart Query Failed")
                     }else{
+                        console.log(item_operation_chart )
                         for(let i = 0;i<item_operation_chart.length;i++){
                             this.op_item_name[i] = item_operation_chart[i].item_name
                             this.op_quantity[i] = item_operation_chart[i].quantity
