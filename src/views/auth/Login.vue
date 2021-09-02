@@ -46,7 +46,7 @@
                                                     color="white"
                                                     v-model="formData.email"
                                                     :rules="[rules.required, rules.email]"
-                                                    :error-messages="login ? 'Incorrect email or password' : null"
+                                                    :error-messages="login ? 'Incorrect email or password' : ''"
                                                 />
                                             </v-col>
                                             <v-col
@@ -107,7 +107,7 @@
                 },
                 rules: {
                     required: value => !!value || 'Required.',
-                    counter: value => (value.length <= 20) || 'Max 20 characters',
+                    counter: value => value.length <= 20 || 'Max 20 characters',
                     email: value => {
                         const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                         return pattern.test(value) || 'Invalid e-mail.'
@@ -129,12 +129,14 @@
                 try{
                     if(this.$refs.loginForm.validate()){
                         console.log(this.login)
-                        this.$store.dispatch("signInAction", this.formData)
+                        const response = this.$store.dispatch("signInAction", this.formData)
+                        console.log(response)
                         console.log(this.login)
 
                         if(this.login == false){
                             console.log("Login Failed")
-                            this.formData.password = ''
+                        }else{
+                            console.log("Login Success")
                         }
                         // if(this.$store.dispatch("signInAction", this.formData)){
                         //     console.log("Login Success!")
