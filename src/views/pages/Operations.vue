@@ -201,6 +201,8 @@
                 if(error){
                     console.log(error)
                 }else{
+                    this.totals.cost_of_exp.array = []
+                    this.totals.item_util.array = []
 
                         for(let i = 0 ;i<data.length;i++){
                             data[i].total = (data[i].total).toFixed(2)
@@ -231,6 +233,8 @@
                     if (error) {
                         console.error(error)
                     }else {
+                        this.totals.cost_of_exp.array = []
+                        this.totals.item_util.array = []
 
                             for(let i = 0 ;i<data.length;i++){
 
