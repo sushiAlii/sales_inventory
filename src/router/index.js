@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { supabase } from '@/supabase'
+import store from '../store/index.js'
 
 import Dashboard from '../views/pages/Dashboard.vue'
 import Items from '../views/pages/Items.vue'
@@ -87,7 +88,7 @@ const router = new VueRouter({
 })
 
 function loggedIn(){
-  const user = supabase.auth.user()
+  const user = store.getters.getUser
   if(user){
     return true;
   }else{
