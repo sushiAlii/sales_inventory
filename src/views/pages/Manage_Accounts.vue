@@ -37,7 +37,7 @@
                     <v-btn
                         color="deep-purple lighten-2"
                         text
-                        :disabled="profile.id == user.id"
+                        :disabled="profile.id == user.id || profile.role_name == 'Admin'"
                         @click="editUser(profile)"
                     >
                         Edit
@@ -229,7 +229,7 @@
             }"
         >
         User Creation<span class="font-weight-bold">&nbsp;FAILED&nbsp;</span>
-        Email is already<span class="font-weight-bold">&nbsp;taken&nbsp;</span>, or both the email and the password are not<span class="font-weight-bold">&nbsp;valid.&nbsp;</span>
+        Email is already<span class="font-weight-bold">&nbsp;taken&nbsp;</span>
     </base-material-snackbar>
     <base-material-snackbar
         v-model="snackbars.createUser.success"
@@ -240,6 +240,17 @@
             }"
         >
         <span class="font-weight-bold">&nbsp;USER CREATED!&nbsp;</span>Email has been sent for verification. 
+    </base-material-snackbar>
+    <base-material-snackbar
+        v-model="snackbars.createUser.notValid"
+        type="error"
+        v-bind="{ 
+                [parsedDirection[0]]: true,
+                [parsedDirection[1]]: true
+            }"
+        >
+        User Creation<span class="font-weight-bold">&nbsp;FAILED&nbsp;</span>
+        Email and the password are not<span class="font-weight-bold">&nbsp;valid.&nbsp;</span>
     </base-material-snackbar>
 </v-container>
 </template>
@@ -295,7 +306,8 @@
                     direction: 'top center',
                     createUser: {
                         success: false,
-                        fail: false
+                        fail: false,
+                        notValid: false
                     }
                 }
             }
@@ -316,24 +328,32 @@
         },
         methods: {
             async handleRegister () {
-                this.dialog = false
+                console.log(this.$refs.form.validate())
                 try{
-                    const { user, session, error } =  await supabase.auth.signUp({
-                    email: this.userCreate.email,
-                    password: this.userCreate.password,
-                    })
-                    if(error){
-                        console.log('Register failed!')
-                        this.snackbars.createUser.fail = !this.snackbars.createUser.fail
+                    if(this.$refs.form.validate()){
+                        this.dialog = false
+                        const { user, session, error } =  await supabase.auth.signUp({
+                            email: this.userCreate.email,
+                            password: this.userCreate.password,
+                            })
+                                if(error){
+                                    console.log('Register failed!')
+                                    this.snackbars.createUser.fail = !this.snackbars.createUser.fail
+                                }else{
+                                    console.log('Register Success! Email Sent')
+                                    this.snackbars.createUser.success = !this.snackbars.createUser.success
+                                }
+                        this.$refs.form.reset()
                     }else{
-                        console.log('Register Success! Email Sent')
-                        this.snackbars.createUser.success = !this.snackbars.createUser.success
+                        console.log("Not Valid")
+                        this.snackbars.createUser.notValid = !this.snackbars.createUser.notValid
+                        
                     }
                 }catch(error){
                     console.log(error);
                     this.createUser.fail = !this.createUser.fail
                 }
-                this.$refs.form.reset()
+                
             },
             async loadUsers(){
                 try{
