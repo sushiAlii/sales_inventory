@@ -383,6 +383,24 @@
                 :loading="loading"
                 loading-text="Loading stocks... It might take a while"
             >
+            <!-- eslint-disable-next-line -->
+                <template v-slot:body.append>
+            <!--    skipped -->
+                    <tr class="sticky-table-footer">
+                        <td v-text="'Total'" />
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td v-text="totals.cost_remaining_stock.total" align="end" />
+                        <td v-text="totals.cost_of_stock.total" align="end"/>
+                        <td></td>
+                    </tr>
+                </template> 
                 <template v-slot:[`item.action`]="{ item }">
                     <v-tooltip
                         bottom
@@ -410,7 +428,7 @@
                             Transfer to Operation
                         </span> -->
                     </v-tooltip>
-                </template>        
+                </template>       
             </v-data-table>
         </v-card>
     </v-container>
@@ -454,6 +472,16 @@
                 row_data: [],
                 item_list: [],
                 stocks: [],
+                totals: {
+                    cost_remaining_stock: {
+                        total_array: [],
+                        total: 0,
+                    },
+                    cost_of_stock: {
+                        total_array: [],
+                        total: 0
+                    },
+                },
                 items: [
                     {
                         text: 'Stock',
@@ -478,10 +506,12 @@
                     },
                     {
                         text: 'Size',
+                        align: 'center',
                         value: 'size'
                     },
                     {
                         text: 'Unit',
+                        align: 'center',
                         value: 'unit_name'
                     },
                     {
@@ -494,22 +524,27 @@
                     },
                     {
                         text: 'Remaining Stock',
+                        align: 'end',
                         value: 'quantity'
                     },
                     {
                         text: 'Collected Stock',
+                        align: 'end',
                         value: 'initial_quantity'
                     },
                     {
                         text: 'Price',
+                        align: 'end',
                         value: 'unit_cost',
                     },
                     {
                         text: 'Cost of Rem. Stock',
+                        align: 'end',
                         value: 'total' 
                     },
                     {
                         text: 'Cost of Stock',
+                        align: 'end',
                         value: 'initial_total' 
                     },
                     {
@@ -549,18 +584,55 @@
                 for(let i = 0 ;i<data.length;i++){
                     data[i].date_received = moment(data[i].date_received).format('MMMM Do YYYY, h:mm a')
                     data[i].expiration_date = moment(data[i].expiration_date).format('MMMM Do YYYY')
+                    data[i].unit_cost = data[i].unit_cost.toFixed(2)
+                    data[i].initial_total = (data[i].initial_total).toFixed(2)
+                    data[i].total = (data[i].total).toFixed(2)
                 }
 
                 if(error){
                     console.log(error)
                 }else{
-                    this.filtered = false
-                    console.log('Success Query')
-                    this.stocks = data;
+                    this.totals.cost_of_stock.total_array = []
+                    this.totals.cost_remaining_stock.total_array = []
+                    console.log(data)
+                        this.filtered = false
+                             console.log('Success Query')
+                                this.stocks = data;
+
+                                this.loadCostStockArray(this.totals.cost_of_stock.total_array, data)
+                            this.loadRemainingArray(this.totals.cost_remaining_stock.total_array, data)
+
+                        console.log(this.totals.cost_of_stock.total_array)
+                        console.log(this.totals.cost_remaining_stock.total_array)
+
+                        this.totals.cost_of_stock.total = this.getTotal(this.totals.cost_of_stock.total_array)
+                        this.totals.cost_remaining_stock.total = this.getTotal(this.totals.cost_remaining_stock.total_array)
+                        console.log(this.totals.cost_of_stock.total)
+
                     this.loading=false
                 }
                 
             },
+            loadCostStockArray(array, data){
+                for(let i = 0 ;i<data.length;i++){
+                    array[i] = data[i].initial_total
+                }
+            },
+            loadRemainingArray(array, data){
+                for(let i = 0 ;i<data.length;i++){
+                    array[i] = data[i].total
+                }
+            },
+            getTotal(array){
+                let total = 0
+
+                    for(let i = 0;i < array.length;i++){
+                        total = +total + +array[i]
+                    }
+    
+                return total.toFixed(2)
+            },
+
             async loadItems(){
                 let { data, error } = await supabase
                 .from('items')
@@ -676,8 +748,18 @@
                         for(let i = 0 ;i<data.length;i++){
                             data[i].date_received = moment(data[i].date_received).format('MMMM Do YYYY, h:mm a')
                             data[i].expiration_date = moment(data[i].expiration_date).format('MMMM Do YYYY')
+                            data[i].unit_cost = data[i].unit_cost.toFixed(2)
+                            data[i].initial_total = (data[i].initial_total).toFixed(2)
+                            data[i].total = (data[i].total).toFixed(2)
                         }
                         console.log(data)
+                            this.totals.cost_of_stock.total_array = []
+                            this.totals.cost_remaining_stock.total_array = []
+                            this.loadCostStockArray(this.totals.cost_of_stock.total_array, data)
+                            this.loadRemainingArray(this.totals.cost_remaining_stock.total_array, data)
+
+                            this.totals.cost_of_stock.total = this.getTotal(this.totals.cost_of_stock.total_array)
+                            this.totals.cost_remaining_stock.total = this.getTotal(this.totals.cost_remaining_stock.total_array)
                         this.filtered = true
                         this.menu2 = false
                         this.stocks = data
@@ -698,7 +780,6 @@
             save2 (date2) {
                 this.$refs.menu2.save(date2)
             },
-            
             getTimestamp(){
                 const today = new Date();
                     const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -735,3 +816,12 @@
 
     }
 </script>
+<style>
+    .sticky-table-footer td {
+        font-weight: bold;
+        position: sticky;
+        bottom: 0;
+        background-color: white;
+        border-top: thin solid rgba(0,0,0,.12);
+    }
+</style>

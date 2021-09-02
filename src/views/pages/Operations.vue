@@ -77,6 +77,23 @@
                 :loading="loading"
                 loading-text="Loading Operations... It might take a while"
             >
+                <!-- eslint-disable-next-line -->
+                <template v-slot:body.append>
+            <!--    skipped -->
+                    <tr class="sticky-table-footer">
+                        <td v-text="'Total'" />
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td v-text="totals.cost_of_exp.total" align="end"></td>
+                        <td v-text="totals.item_util.total" align="end" />
+                        
+                    </tr>
+                </template> 
             </v-data-table>
         </v-card>
     </v-container>
@@ -101,6 +118,16 @@
                 dates: ['',''],
                 operations: [],
                 loading: false,
+                totals: {
+                    cost_of_exp: {
+                        array: [],
+                        total: 0
+                    },
+                    item_util: {
+                        array: [],
+                        total: 0
+                    }
+                },
                 headers: [
                     {
                         text: 'Item',
@@ -116,30 +143,36 @@
                         value: 'unit_name'
                     },
                     {
-                        text: 'Collected Exp.',
-                        value: 'used'
-                    },
-                    {
-                        text: 'Cost of Exp.',
-                        value: 'total' 
-                    },
-                                        {
                         text: 'Collected Exp.(Daily)',
+                        align: 'end',
                         value: 'daily_used' 
                     },
-                                        {
+                    {
                         text: 'Cost of Exp.(Daily)',
+                        align: 'end',
                         value: 'daily_total' 
                     },
-                                        {
+                    {
                         text: 'Collected Exp.(Weekly)',
+                        align: 'end',
                         value: 'weekly_used' 
                     },
                                         {
                         text: 'Cost of Exp.(Weekly)',
+                        align: 'end',
                         value: 'weekly_total' 
                     },
-                                        {
+                    {
+                        text: 'Collected Exp.',
+                        align: 'end',
+                        value: 'used'
+                    },
+                    {
+                        text: 'Cost of Exp.',
+                        align: 'end',
+                        value: 'total' 
+                    },
+                    {
                         text: 'Item Util.',
                         align: 'end',
                         value: 'item_util' 
@@ -168,6 +201,17 @@
                 if(error){
                     console.log(error)
                 }else{
+
+                        for(let i = 0 ;i<data.length;i++){
+                            data[i].total = (data[i].total).toFixed(2)
+                            this.totals.cost_of_exp.array[i] = data[i].total
+                            data[i].item_util = data[i].item_util.toFixed(2)
+                            this.totals.item_util.array[i] = data[i].item_util
+                            data[i].daily_total = data[i].daily_total.toFixed(2)
+                        }
+                    this.totals.cost_of_exp.total = this.getTotal(this.totals.cost_of_exp.array)
+                    this.totals.item_util.total = this.getTotal(this.totals.item_util.array)
+                    console.log(this.totals.cost_of_exp.total)
                     console.log('Success Query')
                     console.log(data)
                     this.operations = data;
@@ -187,11 +231,36 @@
                     if (error) {
                         console.error(error)
                     }else {
+
+                            for(let i = 0 ;i<data.length;i++){
+
+                                    data[i].total = data[i].total.toFixed(2)
+                                        this.totals.cost_of_exp.array[i] = data[i].total
+
+                                    data[i].item_util = data[i].item_util.toFixed(2)
+                                        this.totals.item_util.array[i] = data[i].item_util
+
+                                data[i].daily_used = data[i].daily_used.toFixed(2)
+                                data[i].daily_total = data[i].daily_total.toFixed(2)
+                                data[i].weekly_used = data[i].weekly_used.toFixed(2)
+                                data[i].weekly_total = data[i].weekly_total.toFixed(2)
+                            }
+                        this.totals.cost_of_exp.total = this.getTotal(this.totals.cost_of_exp.array)
+                        this.totals.item_util.total = this.getTotal(this.totals.item_util.array)
                         this.operations = data;
                         console.log("New Operation: " + this.operations)
                         this.loading = false
                     }
                 
+            },
+            getTotal(array){
+                let total = 0
+
+                    for(let i = 0;i < array.length;i++){
+                        total = +total + +array[i]
+                    }
+    
+                return total.toFixed(2)
             },
             async resetDate(){
                 await this.loadOperations()
