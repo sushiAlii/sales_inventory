@@ -435,27 +435,34 @@
                         }
                     }
                 }else{
+                    console.log("Start")
                     for(let i = 0;i<this.units_array.length;i++){
+                        console.log("For Loop")
                         if(this.unit_name == this.units_array[i].unit_name){
                             this.unit_id = this.units_array[i].id    
                         }
-                    }   
-                    const { data, error } = await supabase
-                        .from('items')
-                        .insert([
-                            { 
-                                item_name: this.item_name, 
-                                size: this.size,
-                                unit_id: this.unit_id,
-                                unit_cost: this.unit_cost 
-                            },
-                        ])
-                    if(error){
-                        console.log(error)
+                    }
+                    for(let i = 0;i<this.item_type.type_array.length;i++){
+                        if(this.item_type.type_array[i].type == this.item_type.type){
+                            const { data, error } = await supabase
+                                .from('items')
+                                .insert([
+                                    { 
+                                        item_name: this.item_name, 
+                                        size: this.size,
+                                        type_id: this.item_type.type_array[i].id,
+                                        unit_id: this.unit_id,
+                                        unit_cost: this.unit_cost 
+                                    },
+                                ])
+                            if(error){
+                                console.log(error)
 
-                    }else{
-                        console.log('Item Registered!')
-                        this.resetForm()
+                            }else{
+                                console.log('Item Registered!')
+                                this.resetForm()
+                            }
+                        }
                     }
                 }                
             }, 
