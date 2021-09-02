@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: [],
+    user: null,
     profile: null,
     login: null
   },
@@ -67,8 +67,10 @@ export default new Vuex.Store({
           password: formData.password
         })
         if(error){
+
           commit('setLogin', true)
-          console.log(error)
+          return false
+
         }else{
           commit('setLogin', false)
           console.log(user)
@@ -110,6 +112,7 @@ export default new Vuex.Store({
           console.log(error)
         }else{
           commit('setUser', null)
+          commit('setProfile', null)
           await router.push('/login')
         }
       } catch (error) {
