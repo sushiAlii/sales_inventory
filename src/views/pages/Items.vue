@@ -366,7 +366,6 @@
                         value: 'action'
                     }
                 ]
-
             }
         },
         mounted() {
