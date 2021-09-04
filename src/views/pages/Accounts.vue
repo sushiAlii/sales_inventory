@@ -52,7 +52,7 @@
                         md="3"
                     >
                         <v-file-input
-                            :rules="rules"
+                            :rules="[rules.avatar_size]"
                             type="file"
                             accept="image/png, image/jpeg, image/bmp"
                             placeholder="Pick an avatar"
@@ -85,8 +85,10 @@
 
                     <v-col cols="12">
                     <v-textarea
+                        :rules="[rules.counter]"
                         class="purple-input"
                         label="About Me"
+                        :counter="125"
                         v-model="profile.about_me"
                     />
                     </v-col>
@@ -115,7 +117,7 @@
         >
             <base-material-card
             class="v-card-profile"
-            v-bind:avatar= "profile.avatar"
+            :avatar= "user_profile.avatar_url"
             >
             <v-card-text class="text-center">
                 <h6 class="headline mb-1 grey--text">
@@ -133,14 +135,25 @@
             </base-material-card>
         </v-col>
         </v-row>
+        <base-material-snackbar
+            v-model="snackbars.updateProfile.success"
+            type="success"
+            v-bind="{ 
+                    [parsedDirection[0]]: true,
+                    [parsedDirection[1]]: true
+                }"
+            >
+            Update Profile<span class="font-weight-bold">&nbsp;SUCCESS&nbsp;</span>
+        </base-material-snackbar>
     </v-container>
 </template>
 
 <script>
     import Navbar from '@/components/Navbar'
     import MaterialCard from '@/components/MaterialCard.vue'
+    import MaterialSnackbar from '@/components/MaterialSnackbar'
     import { supabase } from '@/supabase'
-    import { Store } from "vuex";
+    import { mapGetters } from "vuex";
     
 
     export default {
@@ -148,14 +161,16 @@
 
         components: {
             'nav-bar': Navbar,
-            'base-material-card': MaterialCard
+            'base-material-card': MaterialCard,
+            'base-material-snackbar': MaterialSnackbar
         },
         data(){
             return{
                 user: [],
-                rules: [
-                    value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!'
-                ],
+                rules: {
+                    avatar_size: value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!',
+                    counter: value => value.length <= 125 || 'Max 125 characters',
+                },
                 profile: {
                     email: '',
                     role: '',
@@ -163,11 +178,31 @@
                     first_name: '',
                     last_name: '',
                     about_me: ''
-                }
+                },
+                snackbars: {
+                    direction: 'top center',
+                    updateProfile: {
+                        success: false,
+                        fail: false,
+                    },
+                    updateAvatar: {
+                        success: false,
+                        fail: false,
+                    }
+                },
             }
+        },
+        computed:{
+            ...mapGetters({
+                user_profile: 'getProfile'
+            }),
+            parsedDirection () {
+                return this.snackbars.direction.split(' ')
+            },
         },
         mounted(){
             this.loadUser();
+            console.log(this.user_profile)
         },
         methods: {
             async loadUser(){
@@ -207,9 +242,6 @@
 
 
             },
-            async loadPhoto(){
-                
-            },
             async updateProfile(){
                 const { data, error } = await supabase
                 .from('profiles')
@@ -226,6 +258,7 @@
                 }else{
                     console.log(data)
                     this.$store.dispatch("loadProfile")
+                    this.snackbars.updateProfile.success = true
                 }
             },
             async uploadAvatar(file){
@@ -248,6 +281,7 @@
                     })
                     if(error){
                         console.log('Upload Failed')
+                        
                     }else{
                         const { signedURL, error } = await supabase
                             .storage
@@ -262,6 +296,9 @@
                                     id: this.user.id,
                                     avatar_url: signedURL
                                 }], { upsert: true })
+
+
+                        this.$store.dispatch("loadProfile")
                     }
                 }catch(error){
                     console.log(error)
@@ -269,7 +306,7 @@
             },
             onFileChange(file) {
                 if (!file) {
-                return;
+                    return;
                 }
                 this.uploadAvatar(file);
             }
