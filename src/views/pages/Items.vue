@@ -147,7 +147,6 @@
                         value: 'unit_cost'
                     },
                 ]
-
             }
         },
         mounted() {
