@@ -3,3 +3,10 @@ module.exports = {
     'vuetify'
   ]
 }
+module.exports = {
+  pwa: {
+      workboxOptions: {
+        exclude: [/_redirects/]
+      }
+    }
+}
