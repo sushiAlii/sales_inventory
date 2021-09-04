@@ -458,7 +458,7 @@
                                 console.log(error)
 
                             }else{
-                                console.log('Item Registered!')
+                                console.log('Item Registered Success!')
                                 this.resetForm()
                             }
                         }
