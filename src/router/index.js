@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { supabase } from '@/supabase'
+import store from '../store/index.js'
 
 import Dashboard from '../views/pages/Dashboard.vue'
 import Items from '../views/pages/Items.vue'
@@ -15,53 +16,63 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Dashboard',
-    meta: { requiresAuth: true },
-    component: Dashboard
-  },
-  {
-    path: '/items',
-    name: 'Items',
-    meta: { requiresAuth: true },
-    component: Items
-  },
-  {
-    path: '/inventory',
-    name: 'Inventory',
-    meta: { requiresAuth: true },
-    component: Inventory
-  },
-  {
-    path: '/operations',
-    name: 'Operations',
-    meta: { requiresAuth: true },
-    component: Operations
-  },
-  {
-    path: '/login',
-    name: 'Login',
+    path: '/auth',
+    name: 'Auth',
+    component: () => import('@/views/Auth.vue'),
     meta: { guest: true },
-    component: Login,
+    children: [
+      {
+        path: '/login',
+        name: 'Login',
+        component: Login
+      }
+    ]
   },
   {
-    path: '/settings/accounts',
-    name: 'Accounts',
+    path: '/',
+    component: () => import('@/views/Index.vue'),
     meta: { requiresAuth: true },
-    component: Accounts
+    children: [
+      {
+        path: '',
+        name: 'Dashboard',
+        component: Dashboard
+      },
+      {
+        path: '/items',
+        name: 'Items',
+        component: Items
+      },
+      {
+        path: '/inventory',
+        name: 'Inventory',
+        component: Inventory
+      },
+      {
+        path: '/operations',
+        name: 'Operations',
+        component: Operations
+      },
+      {
+        path: '/settings/accounts',
+        name: 'Account',
+        component: Accounts
+      },
+      {
+        path: '/settings/manage_accounts',
+        name: 'Manage Accounts',
+        component: ManageAccounts
+      },
+      {
+        path: '/settings/miscellaneous',
+        name: 'Miscellaneous',
+        component: Miscellaneous
+      },
+    ]
   },
-  {
-    path: '/settings/manage_accounts',
-    name: 'Manage Accounts',
-    meta: { requiresAuth: true },
-    component: ManageAccounts
-  },
-  {
-    path: '/settings/miscellaneous',
-    name: 'Miscellaneous',
-    meta: { requiresAuth: true },
-    component: Miscellaneous
-  }
+
+  
+  
 ]
 
 const router = new VueRouter({
@@ -71,7 +82,7 @@ const router = new VueRouter({
 })
 
 function loggedIn(){
-  const user = supabase.auth.user()
+  const user = store.getters.getUser
   if(user){
     return true;
   }else{

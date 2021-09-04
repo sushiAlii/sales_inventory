@@ -1,9 +1,5 @@
 <template>
-  <v-app>
-    <v-main class="grey lighten-3">
-      <router-view/>
-    </v-main>
-  </v-app>
+  <router-view></router-view>
 </template>
 
 <script>
