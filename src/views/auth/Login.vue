@@ -164,7 +164,8 @@
     .login-page{
         width: 100%;
         height: 100%;
-        background-image: url("https://images.pexels.com/photos/4195409/pexels-photo-4195409.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260");
+        /* background-image: url("https://images.pexels.com/photos/4195409/pexels-photo-4195409.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"); */
+        background-image: url("https://images.pexels.com/photos/389818/pexels-photo-389818.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
         background-size: 100% 100%;
         
     }
