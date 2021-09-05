@@ -346,14 +346,12 @@
                 try{
             
                     let { data: item_inventory_chart, error } = await supabase
-                    .from('item_inventory_chart')
+                    .from('inventory_graph')
                     .select('*')
 
                     if(error){
-                        console.log('Inventory Quantity Query Fail')
                         console.log(error)
                     }else{
-                        console.log(item_inventory_chart)
                         for(let i = 0;i<item_inventory_chart.length;i++){
                             this.item_name[i] = item_inventory_chart[i].item_name
                             this.quantity[i] = item_inventory_chart[i].quantity
@@ -376,13 +374,11 @@
                     if(error){
                         console.log("Operation Chart Query Failed")
                     }else{
-                        console.log(item_operation_chart )
                         for(let i = 0;i<item_operation_chart.length;i++){
                             this.op_item_name[i] = item_operation_chart[i].item_name
                             this.op_quantity[i] = item_operation_chart[i].quantity
                         }
                         this.removeNullValue(this.op_quantity)
-                        console.log(this.op_quantity)
                         this.operationChart.options.high = this.getMaxValue(this.op_quantity)
                         this.operationChart.data.labels = this.op_item_name
                         this.operationChart.data.series[0] = this.op_quantity
@@ -434,9 +430,9 @@
                     if(error){
                         console.log(error)
                     }else{
-                        console.log(empty_stocks)
+                      
                         this.emptyStocksTable.stocks = empty_stocks
-                        console.log(this.emptyStocksTable.stocks)
+                   
                     }
 
                 }catch(error){
