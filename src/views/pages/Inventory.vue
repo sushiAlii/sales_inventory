@@ -220,7 +220,6 @@
                 v-model="dialog_2"
                 max-width="600px"
                 :retain-focus="false"
-                persistent
             >
                 <v-card>
                     <v-card-title>
@@ -407,20 +406,22 @@
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn 
+                                icon
                                 x-small
-                                @click.prevent="onButtonClick(item)"
+                                @click.prevent="onTransferClick(item)"
                                 color="green lighten-2"
                                 :disabled = "filtered"
                                 v-bind="attrs"
                                 v-on="on"
                             >
-                                Transfer
+                                <v-icon>
+                                    mdi-truck-delivery-outline
+                                </v-icon>
                             </v-btn>
                         </template>
-                        <span 
-                            
-                        >
-                            Cannot Transfer on date range
+                        
+                        <span >
+                            Transfer to Operation
                         </span>
                         <!-- <span 
                             v-else
@@ -428,29 +429,108 @@
                             Transfer to Operation
                         </span> -->
                     </v-tooltip>
+                    <span> |</span>
+                    <v-tooltip
+                        bottom
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn 
+                                icon
+                                x-small
+                                @click.prevent="onDeleteClick(item)"
+                                color="red darken-1"
+                                :disabled = "filtered"
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                <v-icon>
+                                    mdi-delete
+                                </v-icon>
+                            </v-btn>
+                        </template>
+                        <span 
+                            
+                        >
+                            Delete
+                        </span>
+                    </v-tooltip>
                 </template>       
             </v-data-table>
+            <v-dialog
+                v-model="dialog_3"
+                max-width="300"
+                :retain-focus="false"
+                persistent
+            >
+                <v-card>
+                    <v-card-title headline>
+                        Delete Item ?
+
+                        <v-spacer />
+                    </v-card-title>
+
+                    <v-card-text class="pb-6 pt-12 text-center">
+                    <v-btn
+                        class="mr-3"
+                        text
+                        @click="dialog_3 = false"
+                    >
+                        No
+                    </v-btn>
+
+                    <v-btn
+                        color="red darken-2"
+                        text
+                        @click="deleteInventory"
+                    >
+                        Yes
+                    </v-btn>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
         </v-card>
+        <base-material-snackbar
+            v-model="snackbars.deleteItem.success"
+            type="success"
+            v-bind="{ 
+                    [parsedDirection[0]]: true,
+                    [parsedDirection[1]]: true
+                }"
+        >
+        <span class="font-weight-bold">&nbsp;Item Deleted Successfully!&nbsp;</span> 
+        </base-material-snackbar>
+        <base-material-snackbar
+            v-model="snackbars.deleteItem.fail"
+            type="error"
+            v-bind="{ 
+                    [parsedDirection[0]]: true,
+                    [parsedDirection[1]]: true
+                }"
+        >
+        <span class="font-weight-bold">&nbsp;Item Delete Failed&nbsp;</span>
+        </base-material-snackbar>
     </v-container>
-    
 </template>
 
 <script>
     import Navbar from '@/components/Navbar'
     import moment from 'moment'
     import { supabase } from '@/supabase'
+    import MaterialSnackbar from '@/components/MaterialSnackbar'
 
     export default {
         name: 'Inventory',
 
         components: {
             Navbar,
+            'base-material-snackbar': MaterialSnackbar
         },
         data (){
             return {
                 search: '',
                 dialog: false,
                 dialog_2: false,
+                dialog_3: false,
                 activePicker: null,
                 date: null,
                 date2: '',
@@ -472,6 +552,13 @@
                 row_data: [],
                 item_list: [],
                 stocks: [],
+                snackbars: {
+                    direction: 'top center',
+                    deleteItem: {
+                        success: false,
+                        fail: false,
+                    }
+                },
                 totals: {
                     cost_remaining_stock: {
                         total_array: [],
@@ -572,6 +659,9 @@
             dateRangeText () {
                 return this.dates.join(' - ')
             },
+            parsedDirection () {
+                return this.snackbars.direction.split(' ')
+            },
         },
         methods: {
             async loadInventory () {
@@ -582,7 +672,7 @@
                     .order('date_received', { ascending: true })
 
                 for(let i = 0 ;i<data.length;i++){
-                    data[i].date_received = moment(data[i].date_received).format('MMMM Do YYYY, h:mm a')
+                    data[i].date_received = moment(data[i].date_received).format('lll')
                     data[i].expiration_date = moment(data[i].expiration_date).format('MMMM Do YYYY')
                     data[i].unit_cost = data[i].unit_cost.toFixed(2)
                     data[i].initial_total = (data[i].initial_total).toFixed(2)
@@ -727,10 +817,30 @@
                             .eq('id', this.row_data.id)
                             
                         this.loadInventory()
-                        
                     }
                 this.transfer_quantity = 1
                 this.dialog_2=false
+            },
+            async deleteInventory(){
+
+                console.log("Delete")
+                const { data, error } = await supabase
+                    .from('stock_inventory')
+                    .delete()
+                    .eq(
+                        'id', this.row_data.id
+                        )
+                    if(error){
+                        console.log(error)
+                        this.dialog_3 = !this.dialog_3
+                        this.snackbars.deleteItem.fail = !this.snackbars.deleteItem.fail
+                    }else{ 
+                        console.log("Delete Success")
+                        this.dialog_3 = !this.dialog_3
+                        this.snackbars.deleteItem.success = !this.snackbars.deleteItem.success
+                        await this.loadInventory()
+                        await this.loadCurrentBatch()
+                    }
             },
             async getFilteredData(){
                 this.loading=true
@@ -787,8 +897,13 @@
                     const dateTime = date +' '+ time;
                     this.timestamp = dateTime;
             },
-            onButtonClick(item){
+            onTransferClick(item){
                 this.dialog_2 = !this.dialog_2
+                this.row_data = item
+                console.log(this.row_data)
+            },
+            onDeleteClick(item){
+                this.dialog_3 = !this.dialog_3
                 this.row_data = item
                 console.log(this.row_data)
             },

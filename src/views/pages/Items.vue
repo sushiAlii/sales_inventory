@@ -221,6 +221,7 @@
                         v-model="dialog_3"
                         max-width="300"
                         :retain-focus="false"
+                        persistent
                     >
                         <v-card>
                             <v-card-title>
@@ -242,7 +243,7 @@
                                 text
                                 @click="dialog_3 = false"
                             >
-                                Nevermind
+                                No
                             </v-btn>
 
                             <v-btn
@@ -270,6 +271,7 @@
                         small
                         @click.prevent="onButtonClick(item)"
                         icon
+                        color="blue lighten-2"
                     >
                         <v-icon>
                             mdi-circle-edit-outline
@@ -291,7 +293,7 @@
             v-model="snackbars.success"
             type="success"
             >
-            <span class="font-weight-bold">&nbsp;OPERATION SUCCESS!&nbsp;</span> 
+            <span class="font-weight-bold">&nbsp;Successfully Deleted Item&nbsp;</span> 
         </base-material-snackbar>
     </v-container>
 </template>
@@ -299,6 +301,7 @@
 <script>
     import Navbar from '@/components/Navbar'
     import MaterialSnackbar from '@/components/MaterialSnackbar'
+    import moment from 'moment'
     import { supabase } from '@/supabase'
 
     export default {
@@ -356,6 +359,10 @@
                         value: 'unit_name'
                     },
                     {
+                        text: 'Date',
+                        value: 'date'
+                    },
+                    {
                         text: 'Unit Cost',
                         align: 'end',
                         value: 'unit_cost'
@@ -384,6 +391,10 @@
                     if(error){
                         console.log(error)
                     }else{
+
+                        for(let i=0;i<item_view.length;i++){
+                            item_view[i].date = moment(item_view[i].date).format('L')
+                        }
                         console.log(item_view)
                         this.items = item_view;
                         this.loading = false
