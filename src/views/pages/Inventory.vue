@@ -652,9 +652,6 @@
             await this.loadItems()
             await this.loadCurrentBatch()
         },
-        mounted(){
-            
-        },
         computed: {
             dateRangeText () {
                 return this.dates.join(' - ')
@@ -727,6 +724,7 @@
                 let { data, error } = await supabase
                 .from('items')
                 .select('*')
+                .order('item_name', { ascending: true })
 
                 if(error){
                     console.log(error)
