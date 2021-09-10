@@ -284,6 +284,10 @@
         <base-material-snackbar
             v-model="snackbars.fail"
             type="error"
+            v-bind="{ 
+                    [parsedDirection[0]]: true,
+                    [parsedDirection[1]]: true
+                }"
             >
             <span class="font-weight-bold">&nbsp;FAILED&nbsp;</span> in deleting the item! - 
             You can only delete an item that has no <span class="font-weight-bold">&nbsp;STOCK&nbsp;</span> 
@@ -292,6 +296,10 @@
         <base-material-snackbar
             v-model="snackbars.success"
             type="success"
+            v-bind="{ 
+                    [parsedDirection[0]]: true,
+                    [parsedDirection[1]]: true
+                }"
             >
             <span class="font-weight-bold">&nbsp;Successfully Deleted Item&nbsp;</span> 
         </base-material-snackbar>
@@ -335,6 +343,7 @@
                     type_array: [],
                 },
                 snackbars: {
+                    direction: 'top center',
                     success: false,
                     fail: false,
                 },
@@ -373,6 +382,11 @@
                         value: 'action'
                     }
                 ]
+            }
+        },
+        computed: {
+            parsedDirection () {
+                return this.snackbars.direction.split(' ')
             }
         },
         mounted() {
