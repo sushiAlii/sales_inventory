@@ -4,7 +4,6 @@
         id="user-profile"
         tag="section"
         
-        fluid
     >
         <v-row class="my-10" justify="center">
         <v-col
@@ -114,10 +113,35 @@
         <v-col
             cols="12"
             md="4"
+            v-if="user_profile != null"
         >
             <base-material-card
             class="v-card-profile"
             :avatar= "user_profile.avatar_url"
+            >
+            <v-card-text class="text-center">
+                <h6 class="headline mb-1 grey--text">
+                    {{ profile.role }}
+                </h6>
+
+                <h4 class="headline font-weight-light mb-3 black--text">
+                {{ profile.first_name }} {{ profile.last_name }}
+                </h4>
+
+                <p class="font-weight-light grey--text">
+                    {{ profile.about_me }}
+                </p>
+            </v-card-text>
+            </base-material-card>
+        </v-col>
+        <v-col
+            cols="12"
+            md="4"
+            v-if="user_profile == null"
+        >
+            <base-material-card
+            class="v-card-profile"
+            avatar= ""
             >
             <v-card-text class="text-center">
                 <h6 class="headline mb-1 grey--text">
@@ -202,6 +226,7 @@
         },
         mounted(){
             this.loadUser();
+            console.log("Mounted!")
             console.log(this.user_profile)
         },
         methods: {
@@ -226,8 +251,8 @@
                 if(error){
                     console.log(error)
                 }else{
-
                     console.log('User Retrieved!')
+                    console.log(profiles)
                     this.user = user
                     this.profile.email = user.email
                     this.profile.avatar = profiles[0].avatar_url
