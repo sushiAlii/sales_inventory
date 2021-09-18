@@ -91,18 +91,24 @@
                         v-model="profile.about_me"
                     />
                     </v-col>
-
                     <v-col
-                    cols="12"
-                    class="text-right"
+                        cols="12"
+                        class="text-right"
                     >
-                    <v-btn
-                        color="success"
-                        class="mr-0"
-                        @click.prevent="updateProfile"
-                    >
-                        Update Profile
-                    </v-btn>
+                        <v-btn
+                            class="mx-4"
+                            color="info"
+                            @click.prevent="updatePassword.dialog = !updatePassword.dialog"
+                        >
+                                Update Password
+                        </v-btn>
+                        <v-btn
+                            color="success"
+                            class="mr-0"
+                            @click.prevent="updateProfile"
+                        >
+                            Update Profile
+                        </v-btn>
                     </v-col>
                 </v-row>
                 </v-container>
@@ -159,6 +165,71 @@
             </base-material-card>
         </v-col>
         </v-row>
+        
+        <v-dialog
+            v-if="user_profile.roles.role_name != 'Staff'"
+            v-model="updatePassword.dialog"
+            persistent
+            max-width="300px"
+        > 
+            <v-card>
+                <v-card-title>
+                    <span headline>Change Password</span>
+                </v-card-title>
+                <v-card-text>
+                <v-container>
+                    <v-form
+                    ref="updateForm"
+                    v-model="updatePassword.valid"
+                    lazy-validation
+                    >
+                        <v-row>
+                            <v-col cols="12">
+                                <v-text-field
+                                    label="Password"
+                                    v-model="updatePassword.password"
+                                    :append-icon="updatePassword.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                    :type="updatePassword.showPassword ? 'text' : 'password'"
+                                    :rules="updatePassword.rules.passwordRules"
+                                    @click:append="updatePassword.showPassword = !updatePassword.showPassword"
+                                    required
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field
+                                    label="Confirm Password"
+                                    v-model="updatePassword.confirmPassword"
+                                    :append-icon="updatePassword.showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                    :type="updatePassword.showConfirmPassword ? 'text' : 'password'"
+                                    :rules="updatePassword.rules.confirmPasswordRules"
+                                    @click:append="updatePassword.showConfirmPassword = !updatePassword.showConfirmPassword"
+                                    required
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                </v-container>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="updateFormReset"
+                >
+                    Close
+                </v-btn>
+                <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="updateUserPassword"
+                >
+                    Update
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        
         <base-material-snackbar
             v-model="snackbars.updateProfile.success"
             type="success"
@@ -168,6 +239,16 @@
                 }"
             >
             Update Profile<span class="font-weight-bold">&nbsp;SUCCESS&nbsp;</span>
+        </base-material-snackbar>
+        <base-material-snackbar
+            v-model="snackbars.updatePassword.success"
+            type="info"
+            v-bind="{ 
+                    [parsedDirection[0]]: true,
+                    [parsedDirection[1]]: true
+                }"
+            >
+            Password Changed<span class="font-weight-bold">&nbsp;Successfully&nbsp;</span>
         </base-material-snackbar>
     </v-container>
 </template>
@@ -203,6 +284,25 @@
                     last_name: '',
                     about_me: ''
                 },
+                updatePassword :{
+                    dialog: false,
+                    valid: '',
+                    password: '',
+                    showPassword: false,
+                    confirmPassword: '',
+                    showConfirmPassword: false,
+                    rules: {
+                        passwordRules: [
+                            v => !!v || 'Password is required',
+                            v => v.length >= 8 || 'Min 8 characters',
+                        ],
+                        confirmPasswordRules: [
+                            v => !!v || 'Confirm Password is required',
+                            v => v.length >= 8 || 'Min 8 characters',
+                            v => v == this.updatePassword.password || 'Password does not match'
+                        ]
+                    }
+                },
                 snackbars: {
                     direction: 'top center',
                     updateProfile: {
@@ -210,6 +310,10 @@
                         fail: false,
                     },
                     updateAvatar: {
+                        success: false,
+                        fail: false,
+                    },
+                    updatePassword: {
                         success: false,
                         fail: false,
                     }
@@ -329,12 +433,43 @@
                     console.log(error)
                 }
             },
+            async updateUserPassword(){
+    
+                try{
+                    if(this.$refs.updateForm.validate()){
+                        const { user, error } = await supabase.auth.update({
+                            password: this.updatePassword.password,
+                        })
+
+                        if(error){
+                            console.log(error)
+                            this.snackbars.updatePassword.fail = !this.snackbars.updatePassword.fail
+                            this.updateFormReset()
+                        }else{
+                            console.log("Change password Success!")
+                            this.snackbars.updatePassword.success = !this.snackbars.updatePassword.success
+                            this.updateFormReset()
+                        }
+                    }
+                    else{
+                        this.$refs.updateForm.validate()
+                    }
+                }catch(error){
+                    console.log(error)
+                }
+            },
             onFileChange(file) {
                 if (!file) {
                     return;
                 }
                 this.uploadAvatar(file);
-            }
+            },
+            updateFormReset () {
+
+                this.updatePassword.dialog = false
+                console.log('reset')
+                this.$refs.updateForm.reset()
+            },
         }
     }
 </script>
