@@ -167,7 +167,6 @@
         </v-row>
         
         <v-dialog
-            v-if="user_profile.roles.role_name != 'Staff'"
             v-model="updatePassword.dialog"
             persistent
             max-width="300px"
