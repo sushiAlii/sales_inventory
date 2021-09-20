@@ -79,7 +79,7 @@ const router = new VueRouter({
 });
 
 function loggedIn() {
-  if (localStorage.getItem("supabase.auth.token")) {
+  if (localStorage.getItem("supabase.auth.token") != null) {
     return true;
   } else {
     return false;
