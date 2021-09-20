@@ -8,79 +8,29 @@
     >
         <v-row class="my-10">
             <v-col
+                
                 cols="12"
-                md="9"
-                sm="9"
-            >
-                <base-material-chart-card
-                    :data="inventoryChart.data"
-                    :options="inventoryChart.options"
-                    :responsive-options="inventoryChart.responsiveOptions"
-                    color="info"
-                    hover-reveal
-                    type="Bar"
-                >
-                    <template v-slot:reveal-actions>
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ attrs, on }">
-                            <v-btn
-                            v-bind="attrs"
-                            color="info"
-                            icon
-                            v-on="on"
-                            >
-                            <v-icon
-                                color="info"
-                            >
-                                mdi-refresh
-                            </v-icon>
-                            </v-btn>
-                        </template>
-
-                        <span>Refresh</span>
-                        </v-tooltip>
-
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ attrs, on }">
-                            <v-btn
-                            v-bind="attrs"
-                            light
-                            icon
-                            v-on="on"
-                            >
-                            <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                        </template>
-
-                        <span>Change Date</span>
-                        </v-tooltip>
-                    </template>
-
-                    <h4 class="card-title font-weight-light mt-2 ml-2">
-                        Inventory Overview
-                    </h4>
-
-                    <p class="d-inline-flex font-weight-light ml-2 mt-1">
-                        Remaining Stock for every Item
-                    </p>
-
-                    <template v-slot:actions>
-                        <v-icon
-                        class="mr-1"
-                        small
-                        >
-                        mdi-clock-outline
-                        </v-icon>
-                        <span class="caption grey--text font-weight-light">Updated {{ inventoryChart.data.date }}</span>
-                    </template>
-                    </base-material-chart-card>
-            </v-col>
-            <v-col
-            cols="12"
-            md="3"
-            sm="3"
+                md="3"
+                sm="3"
             >
                 <base-material-stats-card
+                    
+                    color="#b3c6ff"
+                    icon="mdi-package-variant-closed"
+                    title="Cost of Rem. Stock"
+                    v-bind:value="total_remaining_stock"
+                    sub-icon="mdi-clock-time-four"
+                    v-bind:sub-text="this.inventoryChart.data.date"
+                />
+            </v-col>
+            <v-col
+                
+                cols="12"
+                md="3"
+                sm="3"
+            >
+                <base-material-stats-card
+                    
                     color="warning"
                     icon="mdi-battery-low"
                     v-bind:title="lowest_stock.item_name"
@@ -90,16 +40,28 @@
                     sub-text="Lowest Item Stock..."
                 />
             </v-col>
-        </v-row>
-        <v-row  
-            class="my-10"   
-        >
             <v-col
-            cols="12"
-            md="3"
-            sm="3"
+                cols="12"
+                md="3"
+                sm="3"
             >
                 <base-material-stats-card
+                    
+                    color="#E91E63"
+                    icon="mdi-package-variant"
+                    title="Cost of Exp."
+                    v-bind:value="total_exp_cost"
+                    sub-icon="mdi-calendar-arrow-left"
+                    sub-text="For the last 30 days"
+                />
+            </v-col>
+            <v-col
+                cols="12"
+                md="3"
+                sm="3"
+            >
+                <base-material-stats-card
+                   
                     color="success"
                     icon="mdi-poll"
                     v-bind:title="highest_util.item_name"
@@ -108,86 +70,30 @@
                     sub-text="Highest Item Utilization"
                 />
             </v-col>
-            <v-col
-                
+            <v-col 
                 cols="12"
-                md="9"
-                sm="9"
+                md="12"
+                sm="12"
             >
-                <base-material-chart-card
-                    :data="operationChart.data"
-                    :options="operationChart.options"
-                    :responsive-options="operationChart.responsiveOptions"
-                    color="#E91E63"
-                    hover-reveal
-                    type="Bar"
-                >
-                    <template v-slot:reveal-actions>
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ attrs, on }">
-                            <v-btn
-                            v-bind="attrs"
-                            color="info"
-                            icon
-                            v-on="on"
-                            >
-                            <v-icon
-                                color="info"
-                            >
-                                mdi-refresh
-                            </v-icon>
-                            </v-btn>
-                        </template>
-
-                        <span>Refresh</span>
-                        </v-tooltip>
-
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ attrs, on }">
-                            <v-btn
-                            v-bind="attrs"
-                            light
-                            icon
-                            v-on="on"
-                            >
-                            <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                        </template>
-
-                        <span>Change Date</span>
-                        </v-tooltip>
-                    </template>
-
-                    <h4 class="card-title font-weight-light mt-2 ml-2">
-                        Operation Overview <span class="grey--text font-weight-light"> -- last 30 days</span>
-                    </h4>
-
-                    <p class="d-inline-flex font-weight-light ml-2 mt-1">
-                        Collected Exp. for every Item
-                    </p>
-
-                    <template v-slot:actions>
-                        <v-icon
-                        class="mr-1"
-                        small 
-                        >
-                        mdi-clock-outline
-                        </v-icon>
-                        <span class="caption grey--text font-weight-light">Updated {{ operationChart.data.date }}</span>
-                    </template>
-                    </base-material-chart-card>
+                <v-card>
+                    <bar-chart
+                        class="my-15"
+                        :data="inventoryChart.data"
+                        :options="inventoryChart.options"
+                        :height="100"
+                        v-if="inventoryChart.inventory_load"
+                    >
+                    </bar-chart>
+                </v-card>
             </v-col>
-        </v-row>
-        <v-row
-            class="my-10"
-        >
+
             <v-col
                 cols="12"
                 md="6"
                 sm="6"
             >
                 <base-material-card
-                    color="red darken-2"
+                    color="grey darken-2"
                     class="px-5 py-3"
                 >
                     <template v-slot:heading>
@@ -203,11 +109,40 @@
                         <v-data-table
                         :headers="emptyStocksTable.headers"
                         :items="emptyStocksTable.stocks"
+                        :items-per-page="5"
+                        />
+                    </v-card-text>
+                </base-material-card>
+            </v-col>
+            <v-col
+                cols="12"
+                md="6"
+                sm="6"
+            >
+                <base-material-card
+                    color="#E91E63"
+                    class="px-5 py-3"
+                >
+                    <template v-slot:heading>
+                        <div class="headline font-weight-light">
+                            Recently Used Items
+                        </div>
+
+                        <div class="subtitle-2 font-weight-light">
+                            Items that have been transferred from inventory to operation today
+                        </div>
+                    </template>
+                    <v-card-text>
+                        <v-data-table
+                        :headers="recentTransferredItems.headers"
+                        :items="recentTransferredItems.stocks"
+                        :items-per-page="5"
                         />
                     </v-card-text>
                 </base-material-card>
             </v-col>
         </v-row>
+
     </v-container>
 </template>
 
@@ -217,6 +152,7 @@
     import MaterialChartCard from '@/components/MaterialChartCard'
     import MaterialStatsCard from '@/components/MaterialStatsCard'
     import moment from 'moment'
+    import BarChart from '@/components/BarChart.vue'
     import { supabase } from '@/supabase'
 
     export default {
@@ -226,11 +162,14 @@
             Navbar,
             'base-material-card': MaterialCard,
             'base-material-chart-card': MaterialChartCard,
-            'base-material-stats-card': MaterialStatsCard
+            'base-material-stats-card': MaterialStatsCard,
+            'bar-chart': BarChart
         },
         data(){
             return {
                 item_name: [],
+                total_remaining_stock: '',
+                total_exp_cost: '',
                 quantity: [],
                 op_item_name: [],
                 op_quantity: [],
@@ -243,57 +182,54 @@
                     quantity: ''
                 },
                 inventoryChart: {
+                    inventory_load: false,
+                    date: '',
                     data: {
                         labels: [],
-                        series: [
-                            [0],
-                        ],
-                        date: ''
-                    },
-                    options: {
-                        axisX: {
-                            showGrid: false,
-                        },
-                        low: 0,
-                        high: 100,
-                        chartPadding: {
-                            top: 0,
-                            right: 5,
-                            bottom: 0,
-                            left: 0,
-                        },
-                    },
-                    responsiveOptions: [
-                        ['screen and (max-width: 640px)', {
-                            seriesBarDistance: 5,
-                            axisX: {
-                                labelInterpolationFnc: function (value) {
-                                return value[0]
-                                },
+                        datasets: [
+                            {
+                                label: 'In Stock',
+                                data: [],
+                                backgroundColor: '#b3c6ff'
                             },
-                        }],
-                    ],
-                },
-                operationChart: {
-                    data: {
-                        labels: [],
-                        series: [
-                            [0],
-                        ],
-                        date: '',
-                        month: ''
+                            {
+                                label: 'Used',
+                                data: [],
+                                backgroundColor: '#ffb399'
+                            }
+
+                        ]
                     },
                     options: {
-                        axisX: {
-                            showGrid: false,
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'Inventory Overview for the past 30 days',
+                            fontSize: 20,
+                            fontColor: 'info'
                         },
-                        low: 0,
-                        high: 100,
-                        chartPadding: {
-                            top: 0,
-                            right: 5,
-                            bottom: 0,
-                            left: 0,
+                        tooltips: {
+                            backgroundColor: 'info',
+                        },
+                        scales: {
+                            xAxes: [
+                                {
+                                    display: false,
+                                    gridLines: {
+                                        display: false,
+                                    },
+                                },
+                            ],
+                            yAxes: [
+                                {
+                                    ticks: {
+                                        beginAtZero: true,
+                                    },
+                                    gridLines: {
+                                        display: false,
+                                    },
+                                },
+                            ],
                         },
                     },
                     responsiveOptions: [
@@ -326,63 +262,123 @@
                             value: 'unit_cost'
                         }
                     ]
+                },
+                recentTransferredItems: {
+                    stocks: [],
+                    headers: [
+                        {
+                            text: 'Item',
+                            align: 'start',
+                            value: 'item_name'
+                        },
+                        {
+                            text: 'PriceType',
+                            align: 'start',
+                            value: 'unit_cost'
+                        },
+                        {
+                            text: 'Transferred',
+                            align: 'end',
+                            value: 'used'
+                        }
+                    ]
                 }
             }
         },
         created(){
+            this.getRemainingStockCost()
+            this.getUsedCost()
             this.initializeInventoryChart()
-            this.initializeOperationChart()
             this.initializeLowestStock()
             this.initializeHighUtil()
             this.getEmptyStocks()
+            this.getTodayOperation()
             this.getInventoryRecentDate()
             this.getOperationRecentDate()
         },
         mounted(){
-
+            console.log(this.inventoryChart.data.datasets[0])
         },
         methods: {
             async initializeInventoryChart(){
                 try{
             
                     let { data: item_inventory_chart, error } = await supabase
-                    .from('inventory_graph')
+                    .from('inventory_overview')
                     .select('*')
 
                     if(error){
                         console.log(error)
                     }else{
+                
                         for(let i = 0;i<item_inventory_chart.length;i++){
                             this.item_name[i] = item_inventory_chart[i].item_name
-                            this.quantity[i] = item_inventory_chart[i].quantity
+                            this.quantity[i] = item_inventory_chart[i].stock
+                            this.op_quantity[i] = item_inventory_chart[i].used
                         }
-                        this.removeNullValue(this.quantity)
                         this.inventoryChart.options.high = this.getMaxValue(this.quantity)
                         this.inventoryChart.data.labels = this.item_name
-                        this.inventoryChart.data.series[0] = this.quantity
+                        this.inventoryChart.data.datasets[0].data = this.quantity
+                        this.inventoryChart.data.datasets[1].data = this.op_quantity
+
+                        this.inventoryChart.inventory_load = true
                     }
                 }catch(error){
                     console.log(error)
                 }
             },
-            async initializeOperationChart(){
-                try{
-                    let { data: item_operation_chart, error } = await supabase
-                    .from('item_operation_chart')
-                    .select('*')
+            async getRemainingStockCost(){
 
-                    if(error){
-                        console.log("Operation Chart Query Failed")
-                    }else{
-                        for(let i = 0;i<item_operation_chart.length;i++){
-                            this.op_item_name[i] = item_operation_chart[i].item_name
-                            this.op_quantity[i] = item_operation_chart[i].quantity
+                try{
+                    var formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'PHP',
+
+                    // These options are needed to round to whole numbers if that's what you want.
+                    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+                    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+                    });
+
+                    let { data, error } = await supabase
+                    .from('cost_rem_stock')
+                    .select('*')
+                        if(error){
+                            console.log(error)
+                        }else{
+                            console.log(data)
+                            this.total_remaining_stock = formatter.format(data[0].sum)
+
+                            console.log(this.total_remaining_stock)
                         }
-                        this.removeNullValue(this.op_quantity)
-                        this.operationChart.options.high = this.getMaxValue(this.op_quantity)
-                        this.operationChart.data.labels = this.op_item_name
-                        this.operationChart.data.series[0] = this.op_quantity
-                    }
+
+                }catch(error){
+                    console.log(error)
+                }
+            },
+            async getUsedCost(){
+
+                try{
+                    var formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'PHP',
+
+                    // These options are needed to round to whole numbers if that's what you want.
+                    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+                    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+                    });
+
+                    let { data, error } = await supabase
+                    .from('total_exp_cost')
+                    .select('*')
+                        if(error){
+                            console.log(error)
+                        }else{
+                            console.log(data)
+                            this.total_exp_cost = formatter.format(data[0].sum)
+
+                            console.log(this.total_exp_cost)
+                        }
+
                 }catch(error){
                     console.log(error)
                 }
@@ -439,6 +435,24 @@
                     console.log(error)
                 }
             },  
+            async getTodayOperation(){
+                
+                try{
+                    let { data, error } = await supabase
+                    .from('today_operation')
+                    .select('*')
+
+                        if(error){
+                            console.log(error)
+                        }else{
+                            console.log(data)
+                            this.recentTransferredItems.stocks = data
+                            
+                        }
+                }catch(error){
+                    console.log(error)
+                }
+            },
             async getInventoryRecentDate(){
 
                 try{
