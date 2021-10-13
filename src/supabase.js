@@ -3,9 +3,9 @@
  * Helper to initialize the Supabase client.
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = "https://qddjjvxwyjrrzarshiun.supabase.co"
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyNjg3ODg4NCwiZXhwIjoxOTQyNDU0ODg0fQ.7uHRcFjATbuxJPmxXO8DXQHhXoUriDw2N2-IsdONn6U"
+const supabaseUrl = process.env.VUE_APP_SUPABASE_URL;
+const supabaseKey = process.env.VUE_APP_SUPABASE_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+export const supabase = createClient(supabaseUrl, supabaseKey);
