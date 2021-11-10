@@ -770,11 +770,11 @@ export default {
             data
           );
 
-          this.totals.cost_of_stock.total = this.getTotal(
-            this.totals.cost_of_stock.total_array
+          this.totals.cost_of_stock.total = formatPHP.format(
+            this.getTotal(this.totals.cost_of_stock.total_array)
           );
-          this.totals.cost_remaining_stock.total = this.getTotal(
-            this.totals.cost_remaining_stock.total_array
+          this.totals.cost_remaining_stock.total = formatPHP.format(
+            this.getTotal(this.totals.cost_remaining_stock.total_array)
           );
           this.filtered = true;
           this.menu2 = false;

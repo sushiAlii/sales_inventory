@@ -87,6 +87,7 @@
 import Navbar from "@/components/Navbar";
 import moment from "moment";
 import { supabase } from "@/supabase";
+import { formatPHP } from "../../utils/currencyFormat";
 
 export default {
   name: "Operations",
@@ -165,7 +166,7 @@ export default {
       ],
     };
   },
-  mounted() {
+  created() {
     this.loadOperations();
     this.getCurrentDate();
   },
@@ -194,9 +195,10 @@ export default {
           this.totals.item_util.array[i] = data[i].item_util;
           data[i].daily_total = data[i].daily_total.toFixed(2);
         }
-        this.totals.cost_of_exp.total = this.getTotal(
-          this.totals.cost_of_exp.array
+        this.totals.cost_of_exp.total = formatPHP.format(
+          this.getTotal(this.totals.cost_of_exp.array)
         );
+        this.totals.cost_of_exp.total;
         this.totals.item_util.total = this.getTotal(
           this.totals.item_util.array
         );
@@ -235,8 +237,8 @@ export default {
           data[i].weekly_used = data[i].weekly_used.toFixed(2);
           data[i].weekly_total = data[i].weekly_total.toFixed(2);
         }
-        this.totals.cost_of_exp.total = this.getTotal(
-          this.totals.cost_of_exp.array
+        this.totals.cost_of_exp.total = formatPHP.format(
+          this.getTotal(this.totals.cost_of_exp.array)
         );
         this.totals.item_util.total = this.getTotal(
           this.totals.item_util.array
